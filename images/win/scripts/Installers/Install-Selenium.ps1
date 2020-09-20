@@ -32,3 +32,5 @@ Start-DownloadWithRetry -Url $seleniumReleaseUrl -Name $seleniumFileName -Downlo
 Write-Host "Add selenium jar to the environment variables..."
 $seleniumBinPath = Join-Path $seleniumDirectory $seleniumFileName
 setx "SELENIUM_JAR_PATH" "$($seleniumBinPath)" /M
+
+Invoke-PesterTests -TestFile "Browsers" -TestName "Selenium"

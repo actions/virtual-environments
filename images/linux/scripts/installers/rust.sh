@@ -6,7 +6,6 @@
 
 # Source the helpers for use with the script
 source $HELPER_SCRIPTS/etc-environment.sh
-source $HELPER_SCRIPTS/document.sh
 
 export RUSTUP_HOME=/usr/share/rust/.rustup
 export CARGO_HOME=/usr/share/rust/.cargo
@@ -45,16 +44,3 @@ pushd /etc/skel
 ln -sf $RUSTUP_HOME .rustup
 ln -sf $CARGO_HOME .cargo
 popd
-
-# Document what was added to the image
-echo "Lastly, document what was added to the metadata file"
-DocumentInstalledItem "rustup ($(rustup --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "rust ($(rustc --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "cargo ($(cargo --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "rustfmt ($(rustfmt --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "clippy ($(cargo-clippy --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "rustdoc ($(rustdoc --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "bindgen ($(bindgen --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "cbindgen ($(cbindgen --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "cargo audit ($(cargo audit --version 2>&1 | cut -d ' ' -f 2))"
-DocumentInstalledItem "cargo outdated ($(cargo outdated --version 2>&1 | cut -d ' ' -f 2))"

@@ -5,7 +5,6 @@
 ################################################################################
 
 # Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 source $HELPER_SCRIPTS/os.sh
 
 # Install Powershell
@@ -27,7 +26,3 @@ if ! pwsh -c 'Write-Host Hello world'; then
     echo "pwsh failed to run"
     exit 1
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Powershell ($(pwsh --version))"

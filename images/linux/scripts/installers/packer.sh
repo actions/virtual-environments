@@ -3,8 +3,7 @@
 ##  File:  packer.sh
 ##  Desc:  Installs packer
 ################################################################################
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
+
 
 # Install Packer
 PACKER_VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/packer | jq -r .current_version)
@@ -18,7 +17,3 @@ if ! command -v packer; then
     echo "Packer was not installed or found on PATH"
     exit 1
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Packer ($(packer --version))"

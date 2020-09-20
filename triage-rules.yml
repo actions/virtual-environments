@@ -136,10 +136,10 @@ rules:
 # Types
 - valueFor: '**Question, Bug, or Feature?**'
   contains: Feature
-  addLabels: ['enhancement']
+  addLabels: ['feature request']
 - valueFor: '**Question, Bug, or Feature?**'
   contains: Bug
-  addLabels: ['bug']
+  addLabels: ['investigate']
 - valueFor: '**Question, Bug, or Feature?**'
   contains: Question
   addLabels: ['question']

@@ -32,3 +32,5 @@ Install-Binary -Url $wdkUrl -Name "wdksetup.exe" -ArgumentList $argumentList
 
 # Need to install the VSIX to get the build targets when running VSBuild
 Install-VsixExtension -FilePath $FilePath -Name "WDK.vsix" -VSversion $VSver -InstallOnly
+
+Invoke-PesterTests -TestFile "WDK"

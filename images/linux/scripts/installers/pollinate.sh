@@ -4,8 +4,6 @@
 ##  Desc:  Installs Pollinate
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 # Install Pollinate
 apt-get install -y --no-install-recommends pollinate
@@ -16,7 +14,3 @@ if ! command -v pollinate; then
     echo "pollinate was not installed"
     exit 1
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Pollinate"

@@ -27,10 +27,10 @@ Function Install-Asset {
 $ErrorActionPreference = "Stop"
 
 # Get toolset content
-$toolsetJson = Get-Content -Path "$env:INSTALLER_SCRIPT_FOLDER/toolset.json" -Raw
+$toolset = Get-Content -Path "$env:INSTALLER_SCRIPT_FOLDER/toolset.json" -Raw
 $toolsToInstall = @("Python", "Node", "Boost", "Go")
 
-$tools = ConvertFrom-Json -InputObject $toolsetJson | Select-Object -ExpandProperty toolcache | Where-Object {$ToolsToInstall -contains $_.Name}
+$tools = ConvertFrom-Json -InputObject $toolset | Select-Object -ExpandProperty toolcache | Where-Object {$ToolsToInstall -contains $_.Name}
 
 foreach ($tool in $tools) {
     # Get versions manifest for current tool

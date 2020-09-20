@@ -5,12 +5,4 @@
 
 Choco-Install -PackageName NuGet.CommandLine
 
-if (Get-Command -Name 'nuget.exe')
-{
-    Write-Host 'nuget on path'
-}
-else
-{
-    Write-Host 'nuget is not on path'
-    exit 1
-}
+Invoke-PesterTests -TestFile "Tools" -TestName "Nuget"

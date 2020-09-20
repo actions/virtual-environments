@@ -19,7 +19,3 @@ Install-Binary -Url $SharedManagementObjectsUrl -Name $SharedManagementObjectsNa
 $PowerShellToolsName = "PowerShellTools.msi"
 $PowerShellToolsUrl = "${BaseUrl}/${PowerShellToolsName}"
 Install-Binary -Url $PowerShellToolsUrl -Name $PowerShellToolsName
-
-# install sqlserver PS module
-Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-Install-Module -Name SqlServer -AllowClobber

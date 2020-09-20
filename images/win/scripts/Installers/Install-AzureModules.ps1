@@ -5,8 +5,6 @@
 
 $ErrorActionPreference = "Stop"
 
-Set-PSRepository -InstallationPolicy Trusted -Name PSGallery
-
 # The correct Modules need to be saved in C:\Modules
 $installPSModulePath = $env:PSMODULES_ROOT_FOLDER
 if (-not (Test-Path -LiteralPath $installPSModulePath))
@@ -53,3 +51,5 @@ foreach ($module in $modules)
 # Add modules to the PSModulePath
 $psModuleMachinePath += $env:PSModulePath
 [Environment]::SetEnvironmentVariable("PSModulePath", $psModuleMachinePath, "Machine")
+
+Invoke-PesterTests -TestFile "PowerShellModules" -TestName "AzureModules"

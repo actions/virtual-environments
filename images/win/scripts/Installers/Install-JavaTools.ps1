@@ -119,7 +119,7 @@ setx M2_REPO $m2_repo /M
 setx MAVEN_OPTS $maven_opts /M
 
 # Download cobertura jars
-$uri = 'https://ayera.dl.sourceforge.net/project/cobertura/cobertura/2.1.1/cobertura-2.1.1-bin.zip'
+$uri = 'https://downloads.sourceforge.net/project/cobertura/cobertura/2.1.1/cobertura-2.1.1-bin.zip'
 $coberturaPath = "C:\cobertura-2.1.1"
 
 $archivePath = Start-DownloadWithRetry -Url $uri -Name "cobertura.zip"

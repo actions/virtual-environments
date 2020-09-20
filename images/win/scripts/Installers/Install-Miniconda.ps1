@@ -16,3 +16,5 @@ $ArgumentList = ("/S", "/AddToPath=0", "/RegisterPython=0", "/D=$CondaDestinatio
 
 Install-Binary -Url $InstallerUrl -Name $InstallerName -ArgumentList $ArgumentList
 Set-SystemVariable -SystemVariable "CONDA" -Value $CondaDestination
+
+Invoke-PesterTests -TestFile "Miniconda"

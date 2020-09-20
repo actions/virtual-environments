@@ -11,3 +11,5 @@ $InstallerUrl = "https://download.visualstudio.microsoft.com/download/pr/014120d
 $ArgumentList = ("Setup", "/passive", "/norestart")
 
 Install-Binary -Url $InstallerUrl -Name $InstallerName -ArgumentList $ArgumentList
+
+Invoke-PesterTests -TestFile "Tools" -TestName "NET48"

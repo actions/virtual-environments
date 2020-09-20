@@ -8,6 +8,19 @@ before=$(df / -Pm | awk 'NR==2{print $4}')
 apt-get clean
 rm -rf /tmp/*
 
+# journalctl
+if command -v journalctl; then
+    journalctl --rotate
+    journalctl --vacuum-time=1s
+fi
+
+# delete all .gz and rotated file
+find /var/log -type f -regex ".*\.gz$" -delete
+find /var/log -type f -regex ".*\.[0-9]$" -delete
+
+# wipe log files
+find /var/log/ -type f -exec cp /dev/null {} \;
+
 # after cleanup
 after=$(df / -Pm | awk 'NR==2{print $4}')
 

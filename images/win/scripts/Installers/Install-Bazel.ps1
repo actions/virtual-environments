@@ -6,3 +6,5 @@
 Choco-Install -PackageName bazel
 
 npm install -g @bazel/bazelisk
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Bazel"

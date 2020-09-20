@@ -1,0 +1,99 @@
+{
+    "xcode": {
+        "default": "11.7",
+        "versions": [
+            "12_beta", "11.7"
+        ]
+    },
+    "xamarin": {
+        "vsmac": "8.7.5.19",
+        "mono-versions": [
+            "6.12.0.93", "6.10.0.106"
+        ],
+        "ios-versions": [
+            "13.20.2.2", "13.18.2.1"
+        ],
+        "mac-versions": [
+            "6.20.2.2", "6.18.3.2"
+        ],
+        "android-versions": [
+            "11.0.2.0", "10.3.1.4"
+        ],
+        "bundle-default": "latest",
+        "bundles": [
+            {
+                "symlink": "6_12_0",
+                "mono":"6.12",
+                "ios": "13.20",
+                "mac": "6.20",
+                "android": "11.0" 
+            },
+            {
+                "symlink": "6_10_0",
+                "mono":"6.10",
+                "ios": "13.18",
+                "mac": "6.18",
+                "android": "10.3" 
+            }
+        ]
+    },
+    "java": {
+        "default": "8",
+        "versions": [
+            "8", "11"
+        ]
+    },
+    "android": {
+        "platform-list": [
+            "android-30", "android-29", "android-28", "android-27"
+        ],
+        "build-tools": [
+            "30.0.2", "30.0.1", "30.0.0", "29.0.3", "29.0.2", "29.0.1", "29.0.0", "28.0.3", "28.0.2", "28.0.1", "28.0.0", "27.0.3", "27.0.2", "27.0.1", "27.0.0"
+        ],
+        "extra-list": [
+            "android;m2repository", "google;m2repository", "google;google_play_services", "intel;Hardware_Accelerated_Execution_Manager"
+        ],
+        "addon-list": []
+    },
+    "powershellModules": [
+        {"name": "Az"},
+        {"name": "MarkdownPS"},
+        {"name": "Pester"}
+    ],
+    "toolcache": [
+        {
+            "name": "Python",
+            "url" : "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "darwin",
+            "versions": [
+                "2.7.*",
+                "3.5.*",
+                "3.6.*",
+                "3.7.*",
+                "3.8.*"
+            ]
+        },
+        {
+            "name": "Node",
+            "url" : "https://raw.githubusercontent.com/actions/node-versions/main/versions-manifest.json",
+            "platform" : "darwin",
+            "arch": "x64",
+            "versions": [
+                "10.*",
+                "12.*",
+                "14.*"
+            ]
+        },
+        {
+            "name": "Go",
+            "url" : "https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "darwin",
+            "versions": [
+                "1.14.*",
+                "1.15.*"
+            ]
+        }
+    ]
+}

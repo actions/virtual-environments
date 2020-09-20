@@ -4,8 +4,6 @@
 ##  Desc:  Install random number generator
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 # Install haveged
 apt-get -y install haveged
@@ -18,7 +16,3 @@ for cmd in haveged; do
         exit 1
     fi
 done
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Haveged $(dpkg-query --showformat='${Version}' --show haveged)"

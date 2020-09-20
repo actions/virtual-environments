@@ -5,7 +5,7 @@
 ################################################################################
 
 # Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
+source $HELPER_SCRIPTS/etc-environment.sh
 
 # Install Herbert V. Riedel's PPA for managing multiple version of ghc on ubuntu.
 # https://launchpad.net/~hvr/+archive/ubuntu/ghc
@@ -22,6 +22,7 @@ for version in $ghcMajorMinorVersions; do
     exactVersion=$(echo "$allGhcVersions" | grep $version | sort --unique --version-sort | tail -1)
     apt-get install -y ghc-$exactVersion
     ghcInstalledVersions+=("$exactVersion")
+    defaultGHCVersion=$exactVersion
 done
 
 # Get latest cabal version
@@ -35,7 +36,7 @@ curl -sSL https://get.haskellstack.org/ | sh
 # Run tests to determine that the software installed as expected
 echo "Testing to make sure that script performed as expected, and basic scenarios work"
 # Check all ghc versions
-for version in $ghcVersions; do
+for version in ${ghcInstalledVersions[@]}; do
     if ! command -v /opt/ghc/$version/bin/ghc; then
         echo "ghc $version was not installed"
         exit 1
@@ -53,10 +54,6 @@ if ! command -v stack; then
     exit 1
 fi
 
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Haskell Cabal ($(/opt/cabal/$cabalVersion/bin/cabal --version))"
-for version in ${ghcInstalledVersions[@]}; do
-    DocumentInstalledItem "GHC ($(/opt/ghc/$version/bin/ghc --version))"
-done
-DocumentInstalledItem "Haskell Stack ($(stack --version))"
+# Create symlink for ghc and cabal in /usr/bin
+ln -s "/opt/ghc/$defaultGHCVersion/bin/ghc" "/usr/bin/ghc"
+ln -s "/opt/cabal/$cabalVersion/bin/cabal" "/usr/bin/cabal"

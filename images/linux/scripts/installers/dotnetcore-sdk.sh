@@ -5,7 +5,6 @@
 ################################################################################
 
 source $HELPER_SCRIPTS/etc-environment.sh
-source $HELPER_SCRIPTS/document.sh
 source $HELPER_SCRIPTS/install.sh
 source $HELPER_SCRIPTS/os.sh
 
@@ -84,7 +83,6 @@ for tarball in *.tar.gz; do
 done
 rm urls
 
-DocumentInstalledItem ".NET Core SDK:"
 # Smoke test each SDK
 for sdk in $sortedSdks; do
     mksamples "$sdk" "console"
@@ -93,12 +91,12 @@ for sdk in $sortedSdks; do
     mksamples "$sdk" "web"
     mksamples "$sdk" "mvc"
     mksamples "$sdk" "webapi"
-    DocumentInstalledItemIndent "$sdk"
 done
 
 # NuGetFallbackFolder at /usr/share/dotnet/sdk/NuGetFallbackFolder is warmed up by smoke test
 # Additional FTE will just copy to ~/.dotnet/NuGet which provides no benefit on a fungible machine
 setEtcEnvironmentVariable DOTNET_SKIP_FIRST_TIME_EXPERIENCE 1
 setEtcEnvironmentVariable DOTNET_NOLOGO 1
+setEtcEnvironmentVariable DOTNET_MULTILEVEL_LOOKUP 0
 prependEtcEnvironmentPath /home/runner/.dotnet/tools
 echo 'export PATH="$PATH:$HOME/.dotnet/tools"' | tee -a /etc/skel/.bashrc

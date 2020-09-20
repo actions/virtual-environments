@@ -4,8 +4,6 @@
 ##  Desc:  Installs the AWS CLI
 ################################################################################
 
-# Source the helpers
-source $HELPER_SCRIPTS/document.sh
 source $HELPER_SCRIPTS/os.sh
 
 # Install the AWS CLI v1 on Ubuntu16 and Ubuntu18, and AWS CLI v2 on Ubuntu20
@@ -41,8 +39,3 @@ if ! [[ $sessionPlugin == *"was installed successfully"* ]]
 then
     exit 1
 fi
-
-# Document the installed version
-echo "Document the installed version"
-DocumentInstalledItem "AWS CLI ($(aws --version 2>&1))"
-DocumentInstalledItem "AWS CLI Session manager plugin ($(session-manager-plugin --version 2>&1))"

@@ -4,8 +4,6 @@
 ##  Desc:  Installs Leiningen
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 set -e
 
@@ -29,7 +27,3 @@ if ! command -v lein; then
 else
     lein new app testapp && rm -rf testapp
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Leiningen ($(lein -v))"

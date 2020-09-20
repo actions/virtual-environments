@@ -17,11 +17,11 @@ Choco-Install -PackageName nodejs-lts -ArgumentList "--force"
 Add-MachinePathItem $PrefixPath
 $env:Path = Get-MachinePath
 
-setx NPM_CONFIG_PREFIX $PrefixPath /M
-$env:NPM_CONFIG_PREFIX = $PrefixPath
+setx npm_config_prefix $PrefixPath /M
+$env:npm_config_prefix = $PrefixPath
 
-setx NPM_CONFIG_CACHE $CachePath /M
-$env:NPM_CONFIG_CACHE = $CachePath
+setx npm_config_cache $CachePath /M
+$env:npm_config_cache = $CachePath
 
 npm config set registry http://registry.npmjs.org/
 
@@ -34,3 +34,5 @@ npm install -g yarn
 npm install -g lerna
 npm install -g node-sass
 npm install -g newman
+
+Invoke-PesterTests -TestFile "Node"

@@ -10,3 +10,5 @@ $InstallerUrl = "https://github.com/Microsoft/WinAppDriver/releases/download/v1.
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Install-Binary -Url $InstallerUrl -Name $InstallerName
+
+Invoke-PesterTests -TestFile "WinAppDriver"

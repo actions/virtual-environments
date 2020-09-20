@@ -4,8 +4,6 @@
 ##  Desc:  Installs GNU C++
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 function InstallGcc {
     version=$1
@@ -19,10 +17,6 @@ function InstallGcc {
         echo "$version was not installed"
         exit 1
     fi
-
-    # Document what was added to the image
-    echo "Documenting $version..."
-    DocumentInstalledItem "GNU C++ $($version --version | head -n 1 | cut -d ' ' -f 4)"
 }
 
 # Install GNU C++ compiler

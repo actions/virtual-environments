@@ -1,11 +1,9 @@
 #!/bin/bash
 ################################################################################
 ##  File:  kubernetes-tools.sh
-##  Desc:  Installs kubectl, helm
+##  Desc:  Installs kubectl, helm, kustomize
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 ## Install kubectl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
@@ -23,6 +21,10 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
+# Install kustomize
+download_url="https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
+curl -s "$download_url" | bash
+mv kustomize /usr/local/bin
 
 # Run tests to determine that the software installed as expected
 echo "Testing to make sure that script performed as expected, and basic scenarios work"
@@ -43,9 +45,8 @@ if ! command -v minikube; then
     exit 1
 fi
 
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "kubectl ($(kubectl version --client --short |& head -n 1))"
-DocumentInstalledItem "helm ($(helm version --short |& head -n 1))"
-# minikube version output already has word minikube in it. example minikube version: v1.9.2
-DocumentInstalledItem "$(minikube version --short)"
+echo "Testing to make sure that kustomize was installed"
+if ! command -v kustomize; then
+    echo "kustomize was not installed"
+    exit 1
+fi

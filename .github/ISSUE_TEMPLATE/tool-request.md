@@ -2,7 +2,7 @@
 name: Tool request
 about: Request a new tool or update to a tool
 title: Update/Add [tool name]
-labels: t:Enhancement
+labels: feature request, needs triage
 assignees: ''
 
 ---

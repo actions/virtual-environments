@@ -4,8 +4,6 @@
 ##  Desc:  Downloads and installs hosted tools cache
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 # Fail out if any setups fail
 set -e
@@ -43,9 +41,3 @@ for PACKAGE_NAME in ${PACKAGE_LIST[@]}; do
 done;
 
 popd
-
-DocumentInstalledItem "Ruby:"
-rubys=$(ls $AGENT_TOOLSDIRECTORY/Ruby)
-for ruby in $rubys; do
-	DocumentInstalledItemIndent "Ruby $ruby"
-done;

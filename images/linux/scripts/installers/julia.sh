@@ -4,8 +4,6 @@
 ##  Desc:  Installs Julia, and adds Julia to the path
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 # This function fetches the latest Julia release from the GitHub API
 # Based on https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c
@@ -54,10 +52,6 @@ function InstallJulia () {
         echo "Julia was not installed correctly"
         exit 1
     fi
-
-    # Document what was added to the image
-    echo "Lastly, documenting what we added to the metadata file"
-    DocumentInstalledItem "Julia ($(julia --version))"
 }
 
 InstallJulia "$(GetLatestJuliaRelease)" true

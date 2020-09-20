@@ -1,17 +1,18 @@
 #!/bin/bash
 ################################################################################
 ##  File:  clang.sh
-##  Desc:  Installs Clang compiler (versions: 6, 8 and 9)
+##  Desc:  Installs Clang compiler
 ################################################################################
+set -e
 
 # Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
+source $HELPER_SCRIPTS/os.sh
 
 function InstallClang {
-    version=$1
+    local version=$1
 
     echo "Installing clang-$version..."
-    if [[ $version =~ 9 ]]; then
+    if [[ $version =~ (9|10) ]]; then
         ./llvm.sh $version
         apt-get install -y "clang-format-$version"
     else
@@ -26,30 +27,34 @@ function InstallClang {
             exit 1
         fi
     done
+}
 
-    # Document what was added to the image
-    echo "Documenting clang-$version..."
-    DocumentInstalledItem "Clang $version ($(clang-$version --version | head -n 1 | cut -d ' ' -f 3 | cut -d '-' -f 1))"
+function SetDefaultClang {
+    local version=$1
+
+    echo "Make Clang ${version} default"
+    update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-${version} 100
+    update-alternatives --install /usr/bin/clang clang /usr/bin/clang-${version} 100
+    update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-${version} 100
 }
 
 # Download script for automatic installation
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
 
-versions=(
-    "6.0"
-    "8"
-    "9"
-)
+if isUbuntu16 || isUbuntu18; then
+   versions=( "6.0" "8" "9" )
+   default_clang_version="9"
+fi
 
-for version in ${versions[*]}
-do
+if isUbuntu20 ; then
+    versions=( "8" "9" "10" )
+    default_clang_version="10"
+fi
+
+for version in ${versions[*]}; do
     InstallClang $version
 done
 
+SetDefaultClang $default_clang_version
 rm llvm.sh
-
-# Make Clang 9 default
-update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-9 100
-update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 100
-update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-9 100

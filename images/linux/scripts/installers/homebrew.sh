@@ -6,7 +6,6 @@
 ################################################################################
 
 # Source the helpers
-source $HELPER_SCRIPTS/document.sh
 source $HELPER_SCRIPTS/etc-environment.sh
 
 # Install the Homebrew on Linux
@@ -31,7 +30,3 @@ if ! command -v brew; then
     echo "brew was not installed"
     exit 1
 fi
-
-# Document the installed version
-echo "Document the installed version"
-DocumentInstalledItem "Homebrew on Linux ($(brew -v 2>&1))"

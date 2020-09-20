@@ -19,5 +19,5 @@ Choco-Install -PackageName composer -ArgumentList "--ia", "/DEV=$installDir /PHP
 # Set the PHPROOT environment variable.
 setx PHPROOT $installDir /M
 
-# Done
-exit 0
+# Invoke Pester Tests
+Invoke-PesterTests -TestFile "PHP"

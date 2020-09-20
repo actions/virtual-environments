@@ -34,7 +34,7 @@ function Get-JavaVersionsList {
 
 function Get-RustVersion {
     $rustVersion = [regex]::matches($(rustc --version), "\d+\.\d+\.\d+").Value
-    return "Rust ${rustVersion}"
+    return $rustVersion
 }
 
 function Get-BindgenVersion {
@@ -243,6 +243,21 @@ function Get-PowerShellAzureModules {
     }
 }
 
+function Get-PowerShellModules {
+    $modules = (Get-ToolsetContent).powershellModules.name
+
+    $psModules = Get-Module -Name $modules -ListAvailable | Sort-Object Name | Group-Object Name
+    $psModules | ForEach-Object {
+        $moduleName = $_.Name
+        $moduleVersions = ($_.group.Version | Sort-Object -Unique) -join '<br>'
+
+        [PSCustomObject]@{
+            Module = $moduleName
+            Version = $moduleVersions
+        }
+    }
+}
+
 function Get-CachedDockerImages {
     return (docker images --digests --format "* {{.Repository}}:{{.Tag}}").Split("*") | Where-Object { $_ }
 }
@@ -254,4 +269,8 @@ function Get-PacmanVersion {
     $rawVersion.Split([System.Environment]::NewLine)[1] -match "\d+\.\d+(\.\d+)?" | Out-Null
     $pacmanVersion = $matches[0]
     return "- Pacman $pacmanVersion"
+}
+
+function Get-YAMLLintVersion {
+    yamllint --version
 }

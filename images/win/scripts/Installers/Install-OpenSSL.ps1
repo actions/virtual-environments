@@ -4,3 +4,5 @@
 ################################################################################
 
 Choco-Install -PackageName openssl.light
+
+Invoke-PesterTests -TestFile "Tools" -TestName "OpenSSL"

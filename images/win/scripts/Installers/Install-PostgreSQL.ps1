@@ -19,7 +19,25 @@ $pgBin = Split-Path -Path $pgPath.split('"')[1]
 $pgRoot = Split-Path -Path $pgPath.split('"')[5]
 $pgData = Join-Path $pgRoot "data"
 
+#Validate PostgreSQL installation
+$pgReadyPath = Join-Path $pgBin "pg_isready.exe"
+$pgReady = Start-Process -FilePath $pgReadyPath -Wait -PassThru
+$exitCode = $pgReady.ExitCode
+
+if ($exitCode -ne 0)
+{
+    Write-Host -Object "PostgreSQL is not ready. Exitcode: $exitCode"
+    exit $exitCode
+}
+
 #Added PostgreSQL environment variable
 Set-SystemVariable -SystemVariable PGBIN -Value $pgBin
 Set-SystemVariable -SystemVariable PGROOT -Value $pgRoot
 Set-SystemVariable -SystemVariable PGDATA -Value $pgData
+
+#Stop and disable PostgreSQL service
+$pgService = Get-Service -Name postgresql*
+Stop-Service -InputObject $pgService
+Set-Service -InputObject $pgService -StartupType Disabled
+
+Invoke-PesterTests -TestFile "Databases" -TestName "PostgreSQL"

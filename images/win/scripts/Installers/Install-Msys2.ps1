@@ -60,17 +60,18 @@ Write-Host "`n$dash Remove p7zip/7z package due to conflicts"
 pacman.exe -R --noconfirm --noprogressbar p7zip
 
 # mingw package list
-$tools = "___clang ___cmake ___llvm  ___toolchain ___ragel"
+$tools64 = "___clang ___clang-tools-extra ___cmake ___llvm  ___toolchain ___ragel"
+$tools32 = "___clang ___cmake ___llvm  ___toolchain ___ragel"
 
 # install mingw64 packages
 Write-Host "`n$dash Install mingw64 packages"
 $pre = "mingw-w64-x86_64-"
-pacman.exe -S --noconfirm --needed --noprogressbar $tools.replace('___', $pre).split(' ')
+pacman.exe -S --noconfirm --needed --noprogressbar $tools64.replace('___', $pre).split(' ')
 
 # install mingw32 packages
 Write-Host "`n$dash Install mingw32 packages"
 $pre = "mingw-w64-i686-"
-pacman.exe -S --noconfirm --needed --noprogressbar $tools.replace('___', $pre).split(' ')
+pacman.exe -S --noconfirm --needed --noprogressbar $tools32.replace('___', $pre).split(' ')
 
 # clean all packages to decrease image size
 Write-Host "`n$dash Clean packages"
@@ -87,4 +88,4 @@ pacman.exe -Q | grep -v ^mingw-w64-
 
 Write-Host "`nMSYS2 installation completed"
 
-exit 0
+Invoke-PesterTests -TestFile "MSYS2"

@@ -34,82 +34,49 @@ Expand-Archive -Path .\android-sdk-licenses.zip -DestinationPath 'C:\Program Fil
 # run the updates.
 # keep newer versions in descending order
 
-$sdk_root = "C:\Program Files (x86)\Android\android-sdk"
+# Get android content from toolset
+$androidToolset = (Get-ToolsetContent).android
 
-Push-Location -Path $sdk.FullName
+$sdkRoot = "C:\Program Files (x86)\Android\android-sdk"
+$sdkManager = "$sdkRoot\tools\bin\sdkmanager.bat"
 
-& '.\tools\bin\sdkmanager.bat' --sdk_root=$sdk_root `
-    "platform-tools" `
-    "platforms;android-30" `
-    "platforms;android-29" `
-    "platforms;android-28" `
-    "platforms;android-27" `
-    "platforms;android-26" `
-    "platforms;android-25" `
-    "platforms;android-24" `
-    "platforms;android-23" `
-    "platforms;android-22" `
-    "platforms;android-21" `
-    "platforms;android-19" `
-    "build-tools;30.0.0" `
-    "build-tools;29.0.3" `
-    "build-tools;29.0.2" `
-    "build-tools;29.0.1" `
-    "build-tools;29.0.0" `
-    "build-tools;28.0.3" `
-    "build-tools;28.0.2" `
-    "build-tools;28.0.1" `
-    "build-tools;28.0.0" `
-    "build-tools;27.0.3" `
-    "build-tools;27.0.2" `
-    "build-tools;27.0.1" `
-    "build-tools;27.0.0" `
-    "build-tools;26.0.3" `
-    "build-tools;26.0.2" `
-    "build-tools;26.0.1" `
-    "build-tools;26.0.0" `
-    "build-tools;25.0.3" `
-    "build-tools;25.0.2" `
-    "build-tools;25.0.1" `
-    "build-tools;25.0.0" `
-    "build-tools;24.0.3" `
-    "build-tools;24.0.2" `
-    "build-tools;24.0.1" `
-    "build-tools;24.0.0" `
-    "build-tools;23.0.3" `
-    "build-tools;23.0.2" `
-    "build-tools;23.0.1" `
-    "build-tools;22.0.1" `
-    "build-tools;21.1.2" `
-    "build-tools;20.0.0" `
-    "build-tools;19.1.0" `
-    "extras;android;m2repository" `
-    "extras;google;m2repository" `
-    "extras;google;google_play_services" `
-    "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2" `
-    "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.1" `
-    "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" `
-    "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.1" `
-    "add-ons;addon-google_apis-google-24" `
-    "add-ons;addon-google_apis-google-23" `
-    "add-ons;addon-google_apis-google-22" `
-    "add-ons;addon-google_apis-google-21" `
-    "cmake;3.6.4111459" `
-    "cmake;3.10.2.4988404" `
-    "patcher;v4" `
-    "ndk-bundle"
+& $sdkManager --sdk_root=$sdkRoot "platform-tools"
 
-    # Android NDK root path.
-    $ndk_root = "C:\Program Files (x86)\Android\android-sdk\ndk-bundle"
+Install-AndroidSDKPackages -AndroidSDKManagerPath $sdkManager `
+                          -AndroidSDKRootPath $sdkRoot `
+                          -AndroidPackages $androidToolset.platform_list `
+                          -PrefixPackageName "platforms;"
 
-    if (Test-Path $ndk_root){
-        setx ANDROID_HOME $sdk_root /M
-        setx ANDROID_NDK_HOME $ndk_root /M
-        setx ANDROID_NDK_PATH $ndk_root /M
-    } else {
-        Write-Host "NDK is not installed at path $ndk_root"
-        exit 1
-    }
+Install-AndroidSDKPackages -AndroidSDKManagerPath $sdkManager `
+                          -AndroidSDKRootPath $sdkRoot `
+                          -AndroidPackages $androidToolset.build_tools `
+                          -PrefixPackageName "build-tools;"
 
-Pop-Location
+Install-AndroidSDKPackages -AndroidSDKManagerPath $sdkManager `
+                          -AndroidSDKRootPath $sdkRoot `
+                          -AndroidPackages $androidToolset.extra_list `
+                          -PrefixPackageName "extras;"
+
+Install-AndroidSDKPackages -AndroidSDKManagerPath $sdkManager `
+                          -AndroidSDKRootPath $sdkRoot `
+                          -AndroidPackages $androidToolset.addon_list `
+                          -PrefixPackageName "add-ons;"
+
+Install-AndroidSDKPackages -AndroidSDKManagerPath $sdkManager `
+                          -AndroidSDKRootPath $sdkRoot `
+                          -AndroidPackages $androidToolset.additional_tools
+
+# Android NDK root path.
+$ndkRoot = "C:\Program Files (x86)\Android\android-sdk\ndk-bundle"
+
+if (Test-Path $ndkRoot) {
+    setx ANDROID_HOME $sdkRoot /M
+    setx ANDROID_NDK_HOME $ndkRoot /M
+    setx ANDROID_NDK_PATH $ndkRoot /M
+} else {
+    Write-Host "NDK is not installed at path $ndk_root"
+    exit 1
+}
+
+Invoke-PesterTests -TestFile "Android"
 

@@ -5,6 +5,7 @@ param()
 . $PSScriptRoot\InstallHelpers.ps1
 . $PSScriptRoot\ChocoHelpers.ps1
 . $PSScriptRoot\TestsHelpers.ps1
+. $PSScriptRoot\VisualStudioHelpers.ps1
 
 Export-ModuleMember -Function @(
     'Test-MachinePath'
@@ -33,4 +34,9 @@ Export-ModuleMember -Function @(
     'Get-WhichTool'
     'Get-EnvironmentVariable'
     'Invoke-PesterTests'
+    'Get-VsCatalogJsonPath'
+    'Get-VisualStudioPath'
+    'Install-AndroidSDKPackages'
+    'Get-VisualStudioPackages'
+    'Get-VisualStudioComponents'
 )

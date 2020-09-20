@@ -4,3 +4,5 @@
 ################################################################################
 
 Choco-Install -PackageName azcopy10
+
+Invoke-PesterTests -TestFile "Tools" -TestName "AzCopy"

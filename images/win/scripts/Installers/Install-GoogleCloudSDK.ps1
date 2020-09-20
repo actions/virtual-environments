@@ -8,4 +8,4 @@ $googleCloudSDKInstaller = "https://dl.google.com/dl/cloudsdk/channels/rapid/Goo
 $argumentList = @("/S", "/allusers", "/noreporting")
 Install-Binary -Url $googleCloudSDKInstaller -Name "GoogleCloudSDKInstaller.exe" -ArgumentList $argumentList
 
-Invoke-PesterTests -TestFile "Tools" -TestName "GoogleCouldSDK"
+Invoke-PesterTests -TestFile "Tools" -TestName "GoogleCloudSDK"

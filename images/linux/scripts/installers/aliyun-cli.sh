@@ -4,8 +4,6 @@
 ##  Desc:  Installs Alibaba Cloud CLI
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 # Install Alibaba Cloud CLI
 URL=$(curl -s https://api.github.com/repos/aliyun/aliyun-cli/releases/latest | jq -r '.assets[].browser_download_url | select(contains("aliyun-cli-linux"))')
@@ -19,8 +17,3 @@ if ! command -v aliyun ; then
     echo "aliyun was not installed"
     exit 1
 fi
-
-# Document what was added to the image
-aliyun_version="$(aliyun version)"
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Alibaba Cloud CLI ($aliyun_version)"

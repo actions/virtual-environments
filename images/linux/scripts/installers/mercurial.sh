@@ -5,7 +5,6 @@
 ################################################################################
 
 # Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 source $HELPER_SCRIPTS/os.sh
 
 if isUbuntu16 ; then
@@ -22,7 +21,3 @@ echo "Testing to make sure that script performed as expected, and basic scenario
 if ! command -v hg; then
     exit 1
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Mercurial ($(hg --version | head -n 1))"

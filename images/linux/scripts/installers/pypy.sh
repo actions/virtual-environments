@@ -4,8 +4,6 @@
 ##  Desc:  Installs PyPy
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 source $HELPER_SCRIPTS/install.sh
 
 # This function installs PyPy using the specified arguments:
@@ -75,8 +73,8 @@ uri="https://downloads.python.org/pypy/"
 download_with_retries $uri "/tmp" "pypyUrls.html" compressed
 pypyVersions="$(cat /tmp/pypyUrls.html | grep 'linux64' | awk -v uri="$uri" -F'>|<' '{print uri$5}')"
 
-toolsetJson="$INSTALLER_SCRIPT_FOLDER/toolset.json"
-toolsetVersions=$(cat $toolsetJson | jq -r '.toolcache[] | select(.name | contains("PyPy")) | .versions[]')
+toolset="$INSTALLER_SCRIPT_FOLDER/toolset.json"
+toolsetVersions=$(jq -r '.toolcache[] | select(.name | contains("PyPy")) | .versions[]' $toolset)
 
 # Fail out if any setups fail
 set -e

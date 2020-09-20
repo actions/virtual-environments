@@ -18,6 +18,12 @@ function Get-BazeliskVersion {
     return "Bazelisk $bazeliskVersion"
 }
 
+function Get-RVersion {
+    ($(cmd /c "Rscript --version 2>&1")  | Out-String) -match  "R scripting front-end version (?<version>\d+\.\d+\.\d+)" | Out-Null
+    $rVersion = $Matches.Version
+    return "R $rVersion"
+}
+
 function Get-CMakeVersion {
     ($(cmake -version) | Out-String) -match  "cmake version (?<version>\d+\.\d+\.\d+)" | Out-Null
     $cmakeVersion = $Matches.Version
@@ -87,8 +93,7 @@ function Get-MercurialVersion {
 }
 
 function Get-NSISVersion {
-    $(choco list --local-only nsis | Out-String) -match "nsis (?<version>\d+\.\d+\.?\d*\.?\d*)" | Out-Null
-    $nsisVersion = $Matches.Version
+    $nsisVersion =  &"c:\Program Files (x86)\NSIS\makensis.exe" "/Version"
     return "NSIS $nsisVersion"
 }
 
@@ -100,6 +105,10 @@ function Get-OpenSSLVersion {
 
 function Get-PackerVersion {
     return "Packer $(packer --version)"
+}
+
+function Get-PulumiVersion {
+    return "Pulumi $(pulumi version)"
 }
 
 function Get-SQLPSVersion {
@@ -214,4 +223,27 @@ function Get-GoogleCloudSDKVersion {
 
 function Get-NewmanVersion {
     return "Newman $(newman --version)"
+}
+
+function Get-GHVersion {
+    ($(gh --version) | Select-String -Pattern "gh version") -match "gh version (?<version>\d+\.\d+\.\d+)" | Out-Null
+    $ghVersion = $Matches.Version
+    return "GitHub CLI $ghVersion"
+}
+
+function Get-VisualCPPComponents {
+    $vcpp = Get-CimInstance -ClassName Win32_Product -Filter "Name LIKE 'Microsoft Visual C++%'"
+    $vcpp | Sort-Object Name, Version | ForEach-Object {
+        $isMatch = $_.Name -match "^(?<Name>Microsoft Visual C\+\+ \d{4})\s+(?<Arch>\w{3})\s+(?<Ext>.+)\s+-"
+        if ($isMatch) {
+            $name = '{0} {1}' -f $matches["Name"], $matches["Ext"]
+            $arch = $matches["Arch"].ToLower()
+            $version = $_.Version
+            [PSCustomObject]@{
+                Name = $name
+                Architecture = $arch
+                Version = $version
+            }
+        }
+    }
 }

@@ -9,7 +9,6 @@
         "storage_account": "{{env `ARM_STORAGE_ACCOUNT`}}",
         "temp_resource_group_name": "{{env `TEMP_RESOURCE_GROUP_NAME`}}",
         "location": "{{env `ARM_RESOURCE_LOCATION`}}",
-        "ssh_password": "{{env `SSH_PASSWORD`}}",
         "virtual_network_name": "{{env `VNET_NAME`}}",
         "virtual_network_resource_group_name": "{{env `VNET_RESOURCE_GROUP`}}",
         "virtual_network_subnet_name": "{{env `VNET_SUBNET`}}",
@@ -20,20 +19,18 @@
         "root_folder": "C:",
         "toolset_json_path": "{{env `TEMP`}}\\toolset.json",
         "image_folder": "C:\\image",
-        "commit_file": "C:\\image\\commit.txt",
         "imagedata_file": "C:\\imagedata.json",
-        "metadata_file": "C:\\image\\metadata.txt",
         "helper_script_folder": "C:\\Program Files\\WindowsPowerShell\\Modules\\",
         "psmodules_root_folder": "C:\\Modules",
-        "commit_url": "LATEST",
         "install_user": "installer",
         "install_password": null,
         "capture_name_prefix": "packer",
         "image_version": "dev",
         "image_os": "win16",
-        "github_feed_token": "{{env `GITHUB_FEED_TOKEN`}}"
+        "github_feed_token": "{{env `GITHUB_FEED_TOKEN`}}",
+        "announcements": "{{env `ANNOUNCEMENTS`}}"
     },
-    "sensitive-variables": ["install_password", "ssh_password", "client_secret", "github_feed_token"],
+    "sensitive-variables": ["install_password", "client_secret", "github_feed_token"],
     "builders": [
         {
             "name": "vhd",
@@ -69,9 +66,7 @@
         {
             "type": "powershell",
             "inline":[
-                "New-Item -Path {{user `image_folder`}} -ItemType Directory -Force",
-                "Write-Output {{user `commit_url`}} > {{user `commit_file` }}",
-                "Write-Host (Get-Content -Path {{user `commit_file`}})"
+                "New-Item -Path {{user `image_folder`}} -ItemType Directory -Force"
             ]
         },
         {
@@ -88,6 +83,16 @@
             "type": "file",
             "source": "{{ template_dir }}/scripts/Tests",
             "destination": "{{user `image_folder`}}"
+        },
+        {
+            "type": "file",
+            "source": "{{template_dir}}/toolsets/toolcache-2016.json",
+            "destination": "{{user `root_folder`}}/toolcache.json"
+        },
+        {
+            "type": "file",
+            "source": "{{template_dir}}/toolsets/toolset-2016.json",
+            "destination": "{{user `toolset_json_path`}}"
         },
         {
             "type": "windows-shell",
@@ -107,26 +112,21 @@
         {
             "type": "powershell",
             "environment_vars": [
-                "ImageVersion={{user `image_version`}}"
+                "ImageVersion={{user `image_version`}}",
+                "TOOLSET_JSON_PATH={{user `toolset_json_path`}}",
+                "PSMODULES_ROOT_FOLDER={{user `psmodules_root_folder`}}"
             ],
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Windows2016/Initialize-VM.ps1"
+                "{{ template_dir }}/scripts/Installers/Install-PowerShellModules.ps1",
+                "{{ template_dir }}/scripts/Installers/Initialize-VM.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-WebPlatformInstaller.ps1"
             ],
             "execution_policy": "unrestricted"
         },
         {
             "type": "powershell",
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Update-DotnetTLS.ps1"
-            ]
-        },
-        {
-            "type": "windows-restart",
-            "restart_timeout": "30m"
-        },
-        {
-            "type": "powershell",
-            "scripts":[
+                "{{ template_dir }}/scripts/Installers/Update-DotnetTLS.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-ContainersFeature.ps1"
             ]
         },
@@ -148,18 +148,8 @@
                 "IMAGEDATA_FILE={{user `imagedata_file`}}"
             ],
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Update-ImageData.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Docker.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
+                "{{ template_dir }}/scripts/Installers/Update-ImageData.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Docker.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-PowershellCore.ps1"
             ]
         },
@@ -170,19 +160,7 @@
         {
             "type": "powershell",
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Docker.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-PowershellCore.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Windows2016/Update-DockerImages.ps1"
+                "{{ template_dir }}/scripts/Installers/Update-DockerImages.ps1"
             ]
         },
         {
@@ -191,59 +169,27 @@
                 0,
                 3010
             ],
+            "environment_vars":[
+                "TOOLSET_JSON_PATH={{user `toolset_json_path`}}"
+            ],
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Windows2016/Install-VS2017.ps1"
+                "{{ template_dir }}/scripts/Installers/Install-VS.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-NET48.ps1",
+                "{{ template_dir }}/scripts/Installers/Windows2016/Install-SSDT.ps1"
             ],
             "elevated_user": "{{user `install_user`}}",
             "elevated_password": "{{user `install_password`}}"
         },
         {
             "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Nuget.ps1"
-            ]
-        },
-        {
-            "type": "windows-restart",
-            "restart_timeout": "30m"
-        },
-        {
-            "type": "powershell",
-            "valid_exit_codes": [
-                0,
-                3010
+            "environment_vars":[
+                "TOOLSET_JSON_PATH={{user `toolset_json_path`}}"
             ],
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Windows2016/Install-SSDT.ps1"
-            ],
-            "elevated_user": "{{user `install_user`}}",
-            "elevated_password": "{{user `install_password`}}",
-            "pause_before": "120s"
-        },
-        {
-            "type": "windows-restart",
-            "restart_timeout": "30m"
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Wix.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "valid_exit_codes": [
-                0,
-                3010
-            ],
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-NET48.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-WDK.ps1"
+                "{{ template_dir }}/scripts/Installers/Install-Nuget.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Wix.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-WDK.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Vsix.ps1"
             ]
         },
         {
@@ -260,200 +206,51 @@
         {
             "type": "powershell",
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Windows2016/Validate-SSDT.ps1"
+                "{{ template_dir }}/scripts/Installers/Install-AzureCli.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-AzureDevOpsCli.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-AzCopy.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-NodeLts.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Bazel.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-7zip.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-AliyunCli.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-PostgreSQL.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Packer.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Pulumi.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-JavaTools.ps1"
             ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Wix.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-NET48.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-WDK.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-ServiceFabricSDK.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-AzureCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-AzureDevOpsCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-AzCopy.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-NodeLts.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Bazel.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-AliyunCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-7zip.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-PostgreSQL.ps1"
-            ]
-        },
-          {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Packer.ps1"
-            ]
-        },
-        {
-            "type": "file",
-            "source": "{{template_dir}}/toolsets/toolcache-2016.json",
-            "destination": "{{user `root_folder`}}/toolcache.json"
-        },
-        {
-            "type": "file",
-            "source": "{{template_dir}}/toolsets/toolset-2016.json",
-            "destination": "{{user `toolset_json_path`}}"
         },
         {
             "type": "powershell",
             "environment_vars":[
                 "GITHUB_FEED_TOKEN={{ user `github_feed_token` }}",
-                "ROOT_FOLDER={{user `root_folder`}}"
-            ],
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Download-ToolCache.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "environment_vars":[
                 "TOOLSET_JSON_PATH={{user `toolset_json_path`}}",
                 "ROOT_FOLDER={{user `root_folder`}}"
             ],
             "scripts":[
+                "{{ template_dir }}/scripts/Installers/Download-ToolCache.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-PyPy.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-Toolset.ps1",
-                "{{ template_dir }}/scripts/Installers/Configure-Toolset.ps1"
+                "{{ template_dir }}/scripts/Installers/Configure-Toolset.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-YAMLLint.ps1",
+                "{{ template_dir }}/scripts/Installers/Update-AndroidSDK.ps1"
             ]
         },
         {
             "type": "powershell",
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-OpenSSL.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Perl.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Git.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-GitHub-CLI.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-PHP.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Rust.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Julia.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Sbt.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Svn.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Chrome.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Edge.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Firefox.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Selenium.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
+                "{{ template_dir }}/scripts/Installers/Install-Sbt.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-OpenSSL.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Perl.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Git.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-GitHub-CLI.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-PHP.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Rust.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Julia.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Svn.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Chrome.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Edge.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Firefox.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Selenium.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-IEWebDriver.ps1"
             ]
         },
@@ -464,84 +261,6 @@
             ],
             "elevated_user": "{{user `install_user`}}",
             "elevated_password": "{{user `install_password`}}"
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-VSWhere.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-WinAppDriver.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-WinAppDriver.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-JavaTools.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Cmake.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-AWS.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-AWS-SAM.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-DACFx.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Update-AndroidSDK.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-MysqlCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-PostgreSQL.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-SQLPowerShellTools.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-DotnetSDK.ps1"
-            ]
         },
         {
             "type": "windows-shell",
@@ -559,6 +278,21 @@
         },
         {
             "type": "powershell",
+            "scripts":[
+                "{{ template_dir }}/scripts/Installers/Install-VSWhere.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-WinAppDriver.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Cmake.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-R.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-AWS.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-DACFx.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-MysqlCli.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-SQLPowerShellTools.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-DotnetSDK.ps1"
+            ]
+        },
+
+        {
+            "type": "powershell",
             "elevated_user": "SYSTEM",
             "elevated_password": "",
             "scripts":[
@@ -568,297 +302,31 @@
         {
             "type": "powershell",
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Mingw64.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-TypeScript.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Haskell.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Stack.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Miniconda.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-AzureCosmosDbEmulator.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Mercurial.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Jq.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Zstd.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-InnoSetup.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-GitVersion.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-NSIS.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-CloudFoundryCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Vcpkg.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-KubernetesCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-Kind.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-MongoDB.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
+                "{{ template_dir }}/scripts/Installers/Install-Mingw64.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-TypeScript.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Haskell.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Stack.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Miniconda.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-AzureCosmosDbEmulator.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Mercurial.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Jq.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Zstd.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-InnoSetup.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-GitVersion.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-NSIS.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-CloudFoundryCli.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Vcpkg.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-KubernetesCli.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Kind.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-MongoDB.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-GoogleCloudSDK.ps1"
             ]
         },
         {
-            "type": "windows-restart",
-            "restart_timeout": "30m"
-        },
-        {
-            "type": "powershell",
-            "environment_vars":[
-                "TOOLSET_JSON_PATH={{user `toolset_json_path`}}",
-                "PSMODULES_ROOT_FOLDER={{user `psmodules_root_folder`}}"
-            ],
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-AzureModules.ps1"
-            ]
-        },
-        {
             "type": "powershell",
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-AzureCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-AWS-SAM.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-AzureDevOpsCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-AzCopy.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Msys2.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-OpenSSL.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Perl.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-PHP.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Rust.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Sbt.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Svn.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-NodeLts.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Bazel.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-AliyunCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-DACFx.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-DotnetSDK.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-MysqlCli.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-SQLPowerShellTools.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-TypeScript.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Stack.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Miniconda.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-AzureCosmosDbEmulator.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Packer.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Zstd.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-NSIS.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-Vcpkg.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-VSWhere.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Validate-DiskSpace.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
-                "{{ template_dir }}/scripts/Installers/Install-WindowsUpdates.ps1"
+                "{{ template_dir }}/scripts/Installers/Install-WindowsUpdates.ps1",
+                "{{ template_dir }}/scripts/Installers/Configure-DynamicPort.ps1"
             ],
             "elevated_user": "{{user `install_user`}}",
             "elevated_password": "{{user `install_password`}}"
@@ -874,6 +342,7 @@
             ],
             "environment_vars":[
                 "TOOLSET_JSON_PATH={{user `toolset_json_path`}}",
+                "PSMODULES_ROOT_FOLDER={{user `psmodules_root_folder`}}",
                 "ROOT_FOLDER={{user `root_folder`}}"
             ]
         },
@@ -881,6 +350,10 @@
             "type": "powershell",
             "inline": [
                 "pwsh -File '{{user `image_folder`}}\\SoftwareReport\\SoftwareReport.Generator.ps1'"
+            ],
+            "environment_vars":[
+                "TOOLSET_JSON_PATH={{user `toolset_json_path`}}",
+                "ANNOUNCEMENTS={{user `announcements`}}"
             ]
         },
         {
@@ -911,12 +384,7 @@
         {
             "type": "powershell",
             "scripts":[
-                "{{ template_dir }}/scripts/Installers/Configure-Antivirus.ps1"
-            ]
-        },
-        {
-            "type": "powershell",
-            "scripts":[
+                "{{ template_dir }}/scripts/Installers/Configure-Antivirus.ps1",
                 "{{ template_dir }}/scripts/Installers/Disable-JITDebugger.ps1"
             ]
         },

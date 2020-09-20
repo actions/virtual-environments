@@ -6,16 +6,17 @@ function Get-PostgreSQLMarkdown
     $pgRoot = $pgPath.split('"')[1].replace("\bin\pg_ctl.exe", "")
     $env:Path += ";${env:PGBIN}"
     $pgVersion = (postgres --version).split()[2].Trim()
-    $content = [PSCustomObject]@{
-        Version = $pgVersion
-        UserName = $env:PGUSER
-        Password = $env:PGPASSWORD
-        EnvironmentVariables = "PGBIN=$env:PGBIN; <br> PGDATA=$env:PGDATA; <br> PGROOT=$env:PGROOT"
-        Path = $pgRoot
-        ServiceName = $pgService.Name
-        ServiceStatus = $pgService.State
-        ServiceStartType = $pgService.StartMode
-    } | New-MDTable
+
+    $content = @(
+        [PSCustomObject]@{ Property = "ServiceName"; Value = $pgService.Name },
+        [PSCustomObject]@{ Property = "Version"; Value = $pgVersion },
+        [PSCustomObject]@{ Property = "ServiceStatus"; Value = $pgService.State },
+        [PSCustomObject]@{ Property = "ServiceStartType"; Value = $pgService.StartMode },
+        [PSCustomObject]@{ Property = "EnvironmentVariables"; Value = "`PGBIN=$env:PGBIN` <br> `PGDATA=$env:PGDATA` <br> `PGROOT=$env:PGROOT` " },
+        [PSCustomObject]@{ Property = "Path"; Value = $pgRoot },
+        [PSCustomObject]@{ Property = "UserName"; Value = $env:PGUSER },
+        [PSCustomObject]@{ Property = "Password"; Value = $env:PGPASSWORD }
+    ) | New-MDTable
 
     Build-MarkdownElement -Head $name -Content $content
 }

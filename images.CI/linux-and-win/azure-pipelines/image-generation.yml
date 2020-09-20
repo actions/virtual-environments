@@ -1,0 +1,75 @@
+# Ideally we would use GitHub Actions for this, but since we use self-hosted machines to run image builds
+# we need the following features to use GitHub Actions for Images CI:
+# - https://github.community/t5/GitHub-Actions/Make-secrets-available-to-builds-of-forks/m-p/30678#M508
+# - https://github.community/t5/GitHub-Actions/GitHub-Actions-Manual-Trigger-Approvals/td-p/31504
+# - https://github.community/t5/GitHub-Actions/Protecting-github-workflows/td-p/30290
+
+jobs:
+- job:
+  pool: ci-agent-pool
+  timeoutInMinutes: 600
+  cancelTimeoutInMinutes: 30
+  variables:
+  - group: Image Generation Variables
+
+  steps:
+  - task: PowerShell@2
+    displayName: 'Download custom repository'
+    condition: and(ne(variables['CUSTOM_REPOSITORY_URL'], ''), ne(variables['CUSTOM_REPOSITORY_BRANCH'], ''))
+    inputs:
+      targetType: 'filePath'
+      filePath: ./images.CI/download-repo.ps1
+      arguments: -RepoUrl $(CUSTOM_REPOSITORY_URL) `
+                 -RepoBranch $(CUSTOM_REPOSITORY_BRANCH)
+
+  - task: PowerShell@2
+    displayName: 'Build VM'
+    inputs:
+      targetType: filePath
+      filePath: ./images.CI/linux-and-win/build-image.ps1
+      arguments: -ResourcesNamePrefix $(Build.BuildId) `
+                        -ClientId $(CLIENT_ID) `
+                        -ClientSecret $(CLIENT_SECRET) `
+                        -Image ${{ parameters.image_type }} `
+                        -ResourceGroup $(AZURE_RESOURCE_GROUP) `
+                        -StorageAccount $(AZURE_STORAGE_ACCOUNT) `
+                        -SubscriptionId $(AZURE_SUBSCRIPTION) `
+                        -TenantId $(AZURE_TENANT) `
+                        -Location $(AZURE_LOCATION) `
+                        -VirtualNetworkName $(BUILD_AGENT_VNET_NAME) `
+                        -VirtualNetworkRG $(BUILD_AGENT_VNET_RESOURCE_GROUP) `
+                        -VirtualNetworkSubnet $(BUILD_AGENT_SUBNET_NAME) `
+                        -GitHubFeedToken $(GITHUB_TOKEN)
+
+  - task: PowerShell@2
+    displayName: 'Create release for VM deployment'
+    inputs:
+      targetType: filePath
+      filePath: ./images.CI/linux-and-win/create-release.ps1
+      arguments: -BuildId $(Build.BuildId) `
+                        -Organization $(RELEASE_TARGET_ORGANIZATION) `
+                        -DefinitionId $(RELEASE_TARGET_DEFINITION_ID) `
+                        -Project $(RELEASE_TARGET_PROJECT) `
+                        -ImageName ${{ parameters.image_type }} `
+                        -AccessToken $(RELEASE_TARGET_TOKEN)
+
+  - task: PowerShell@2
+    displayName: 'Output Readme file content'
+    inputs:
+      targetType: 'inline'
+      script: |
+        $docsPath = Get-ChildItem -Path "images" -Include ${{ parameters.image_readme_name }} -Recurse -Depth 1 | Select-Object -First 1
+        Get-Content -Path $docsPath
+
+  - task: PowerShell@2
+    displayName: 'Clean up resources'
+    condition: always()
+    inputs:
+      targetType: filePath
+      filePath: ./images.CI/linux-and-win/cleanup.ps1
+      arguments: -ResourcesNamePrefix $(Build.BuildId) `
+                     -ClientId $(CLIENT_ID) `
+                     -ClientSecret $(CLIENT_SECRET) `
+                     -Image ${{ parameters.image_type }} `
+                     -SubscriptionId $(AZURE_SUBSCRIPTION) `
+                     -TenantId $(AZURE_TENANT)

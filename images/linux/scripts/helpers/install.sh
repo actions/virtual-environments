@@ -13,7 +13,7 @@ download_with_retries() {
     local NAME="${3:-${URL##*/}}"
     local COMPRESSED="$4"
 
-    if [ $COMPRESSED == "compressed" ]; then
+    if [[ $COMPRESSED == "compressed" ]]; then
         COMMAND="curl $URL -4 -sL --compressed -o '$DEST/$NAME'"
     else
         COMMAND="curl $URL -4 -sL -o '$DEST/$NAME'"

@@ -5,6 +5,7 @@ enum ImageType {
     Windows2019 = 1
     Ubuntu1604 = 2
     Ubuntu1804 = 3
+    Ubuntu2004 = 4
 }
 
 Function Get-PackerTemplatePath {
@@ -30,9 +31,22 @@ Function Get-PackerTemplatePath {
         ([ImageType]::Ubuntu1804) {
             $relativePath = "\images\linux\ubuntu1804.json"
         }
+        ([ImageType]::Ubuntu2004) {
+            $relativePath = "\images\linux\ubuntu2004.json"
+        }
     }
 
     return $RepositoryRoot + $relativePath;
+}
+
+Function Get-LatestCommit {
+    [CmdletBinding()]
+    param()
+
+    process {
+        Write-Host "Latest commit:"
+        git log --pretty=format:"Date: %cd; Commit: %H - %s; Author: %an <%ae>" -1
+    }
 }
 
 Function GenerateResourcesAndImage {
@@ -165,6 +179,8 @@ Function GenerateResourcesAndImage {
     $sub = Get-AzureRmSubscription -SubscriptionId $SubscriptionId
     $tenantId = $sub.TenantId
     # "", "Note this variable-setting script for running Packer with these Azure resources in the future:", "==============================================================================================", "`$spClientId = `"$spClientId`"", "`$ServicePrincipalClientSecret = `"$ServicePrincipalClientSecret`"", "`$SubscriptionId = `"$SubscriptionId`"", "`$tenantId = `"$tenantId`"", "`$spObjectId = `"$spObjectId`"", "`$AzureLocation = `"$AzureLocation`"", "`$ResourceGroupName = `"$ResourceGroupName`"", "`$storageAccountName = `"$storageAccountName`"", "`$install_password = `"$install_password`"", ""
+
+    Get-LatestCommit -ErrorAction SilentlyContinue
 
     packer.exe build -on-error=ask `
         -var "client_id=$($spClientId)" `

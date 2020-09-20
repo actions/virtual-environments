@@ -4,3 +4,5 @@
 ################################################################################
 
 Choco-Install -PackageName strawberryperl
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Perl"

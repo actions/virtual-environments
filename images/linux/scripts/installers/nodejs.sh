@@ -4,8 +4,6 @@
 ##  Desc:  Installs Node.js LTS and related tooling (Gulp, Grunt)
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 # Install LTS Node.js and related build tools
 curl -sL https://raw.githubusercontent.com/mklement0/n-install/stable/bin/n-install | bash -s -- -ny -
@@ -31,16 +29,3 @@ for cmd in node grunt gulp webpack parcel yarn newman; do
         exit 1
     fi
 done
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Node.js ($(node --version))"
-DocumentInstalledItem "Grunt ($(grunt --version))"
-DocumentInstalledItem "Gulp ($(gulp --version))"
-DocumentInstalledItem "n ($(n --version))"
-DocumentInstalledItem "Parcel ($(parcel --version))"
-DocumentInstalledItem "TypeScript ($(tsc --version))"
-DocumentInstalledItem "Webpack ($(webpack --version))"
-DocumentInstalledItem "Webpack CLI ($(webpack-cli --version))"
-DocumentInstalledItem "Yarn ($(yarn --version))"
-DocumentInstalledItem "Newman ($(newman --version))"

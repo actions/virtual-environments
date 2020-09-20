@@ -19,7 +19,7 @@ function Get-WhichTool($tool) {
 
 # Gets value of environment variable by the name
 function Get-EnvironmentVariable($variable) {
-    return [System.Environment]::GetEnvironmentVariable($variable)
+    return [System.Environment]::GetEnvironmentVariable($variable, "Machine")
 }
 
 # Update environment variables without reboot

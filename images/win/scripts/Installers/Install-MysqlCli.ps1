@@ -26,3 +26,5 @@ Extract-7Zip -Path $mysqlArchPath -DestinationPath "C:\"
 
 # Adding mysql in system environment path
 Add-MachinePathItem $mysqlPath
+
+Invoke-PesterTests -TestFile "Databases" -TestName "MySQL"

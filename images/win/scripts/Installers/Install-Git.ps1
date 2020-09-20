@@ -41,4 +41,4 @@ Choco-Install -PackageName hub
 Add-MachinePathItem "C:\Program Files\Git\bin"
 
 Invoke-PesterTests -TestFile "Git" -TestName "Git"
-Invoke-PesterTests -TestFile "Git" -TestName "Hub"
+Invoke-PesterTests -TestFile "CLI.Tools" -TestName "Hub CLI"

@@ -4,3 +4,5 @@
 ################################################################################
 
 Choco-Install -PackageName vswhere
+
+Invoke-PesterTests -TestFile "Tools" -TestName "VSWhere"

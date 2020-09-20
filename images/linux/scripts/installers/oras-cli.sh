@@ -4,8 +4,6 @@
 ##  Desc:  Installs ORAS CLI
 ################################################################################
 
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 source $HELPER_SCRIPTS/install.sh
 
 # Determine latest ORAS CLI version
@@ -24,7 +22,3 @@ if ! oras version; then
     echo "ORAS CLI was not installed"
     exit 1
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "ORAS CLI $(oras version | awk 'NR==1{print $2}')"

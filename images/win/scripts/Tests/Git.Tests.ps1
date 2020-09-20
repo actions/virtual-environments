@@ -24,12 +24,6 @@ Describe "Git" {
     }
 }
 
-Describe "Hub" {
-    It "hub is installed" {
-        "hub --version" | Should -ReturnZeroExitCode
-    }
-}
-
 Describe "GitVersion" {
     It "gitversion is installed" {
         "gitversion /version" | Should -ReturnZeroExitCode

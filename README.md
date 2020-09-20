@@ -19,7 +19,8 @@ The "ubuntu-latest" YAML workflow label still uses the Ubuntu 18.04 virtual envi
 
 ***Looking for other Linux distributions?*** We do not plan to offer other Linux distributions. We recommend using Docker if you'd like to build using other distributions with the hosted virtual environments. Alternatively, you can leverage [self-hosted runners] and fully customize your environment to your needs.
 
-***Where is the macOS source?*** We are in the process of preparing our macOS source to live in this repo so we can take contributions from the community. Until then, we appreciate your patience and ask you continue to make tool requests by filing issues.
+***How to contribute to macOS source?*** macOS source lives in this repository and available for everyone. However, MacOS image-generation CI doesn't support external contributions yet so we are not able to accept pull-requests for now.
+We are in the process of preparing MacOS CI to accept contributions. Until then, we appreciate your patience and ask you continue to make tool requests by filing issues.
 
 ## Software Guidelines
 In general, these are the guidelines we consider when deciding what to pre-install:
