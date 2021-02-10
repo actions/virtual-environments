@@ -3,39 +3,47 @@
 ##  Desc:  Install latest stable version of Microsoft Edge browser
 ################################################################################
 
-choco install microsoft-edge -y
+Choco-Install -PackageName microsoft-edge
 
-# Install Microsoft Edge Web Driver
-Write-Host "Install Edge WebDriver"
-$DestinationPath = "$($env:SystemDrive)\";
-
-$EdgeDriverPath = "${DestinationPath}SeleniumWebDrivers\EdgeDriver"
-if (-not (Test-Path -Path $EdgeDriverPath)) {
-    New-Item -Path $EdgeDriverPath -ItemType "directory"
+# Install Microsoft Edge WebDriver
+Write-Host "Install Edge WebDriver..."
+$EdgeDriverPath = "$($env:SystemDrive)\SeleniumWebDrivers\EdgeDriver"
+if (-not (Test-Path -Path $EdgeDriverPath))
+{
+    New-Item -Path $EdgeDriverPath -ItemType Directory -Force
 }
 
+Write-Host "Get the Microsoft Edge WebDriver version..."
 $RegistryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths"
 $EdgePath = (Get-ItemProperty "$RegistryPath\msedge.exe").'(default)'
 [version]$EdgeVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($EdgePath).ProductVersion
 $EdgeDriverVersionUrl = "https://msedgedriver.azureedge.net/LATEST_RELEASE_$($EdgeVersion.Major)"
-$EdgeDriverVersionFile = "$EdgeDriverPath\versioninfo.txt"
-Invoke-WebRequest -Uri $EdgeDriverVersionUrl -OutFile $EdgeDriverVersionFile
 
-Write-Host "Microsoft Edge driver download started"
+$EdgeDriverVersionFile = Start-DownloadWithRetry -Url $EdgeDriverVersionUrl -Name "versioninfo.txt" -DownloadPath $EdgeDriverPath
+
+Write-Host "Download Microsoft Edge WebDriver..."
 $EdgeDriverLatestVersion = Get-Content -Path $EdgeDriverVersionFile
-$EdgeDriverDownloadUrl="https://msedgedriver.azureedge.net/${EdgeDriverLatestVersion}/edgedriver_win64.zip"
-$DestFile = "$EdgeDriverPath\edgedriver_win64.zip"
-Invoke-WebRequest -Uri $EdgeDriverDownloadUrl -OutFile $DestFile
+$EdgeDriverArchName = "edgedriver_win64.zip"
+# A temporary workaround to install the previous driver version because 85.0.564.60 for win64 doesn't exist
+if ($EdgeDriverLatestVersion -eq "85.0.564.60")
+{
+    $EdgeDriverLatestVersion = "85.0.564.51"
+    Set-Content -Path $EdgeDriverVersionFile -Value $EdgeDriverLatestVersion
+}
 
-Write-Host "Microsoft Edge driver installation started"
-Expand-Archive -Path $DestFile -DestinationPath $EdgeDriverPath -Force
-Remove-Item -Path $DestFile -Force
+$EdgeDriverDownloadUrl = "https://msedgedriver.azureedge.net/${EdgeDriverLatestVersion}/${EdgeDriverArchName}"
 
-Write-Host "Setting the environment variables"
+$EdgeDriverArchPath = Start-DownloadWithRetry -Url $EdgeDriverDownloadUrl -Name $EdgeDriverArchName
 
-setx EdgeWebDriver "$EdgeDriverPath" /M;
+Write-Host "Expand Microsoft Edge WebDriver archive..."
+Extract-7Zip -Path $EdgeDriverArchPath -DestinationPath $EdgeDriverPath
 
-$regEnvKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\';
-$PathValue = Get-ItemPropertyValue -Path $regEnvKey -Name 'Path';
-$PathValue += ";$EdgeDriverPath\";
-Set-ItemProperty -Path $regEnvKey -Name 'Path' -Value $PathValue;
+Write-Host "Setting the environment variables..."
+setx EdgeWebDriver "$EdgeDriverPath" /M
+
+$regEnvKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\'
+$PathValue = Get-ItemPropertyValue -Path $regEnvKey -Name 'Path'
+$PathValue += ";$EdgeDriverPath\"
+Set-ItemProperty -Path $regEnvKey -Name 'Path' -Value $PathValue
+
+Invoke-PesterTests -TestFile "Browsers" -TestName "Edge"

@@ -3,4 +3,6 @@
 ##  Desc:  Install Perl
 ################################################################################
 
-choco install strawberryperl -y
+Choco-Install -PackageName strawberryperl
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Perl"

@@ -1,2 +1,1 @@
-# Do not normalize line endings
-*       -text
+*   text=auto eol=lf

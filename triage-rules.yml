@@ -7,165 +7,139 @@ rules:
 - valueFor: '**Area for Triage**'
   contains: '.NET Core'
   addLabels: ['Area: .NET Core']
-  assign: ['bishal-pdmsft', 'pulkitaggarwl']
 
 # Area: .NET Framework
 - valueFor: '**Area for Triage**'
   contains: '.NET Framework'
   addLabels: ['Area: .NET Framework']
-  assign: ['azuredaveops', 'wnjenkin']
 
 # Area: Android
 - valueFor: '**Area for Triage**'
   contains: 'Android'
   addLabels: ['Area: Android']
-  assign: ['madhurig']
 
 # Area: Apple
 - valueFor: '**Area for Triage**'
   contains: 'Apple'
   addLabels: ['Area: Apple']
-  assign: ['sergey-akhalkov']
 
 # Area: Artifacts
 - valueFor: '**Area for Triage**'
   contains: 'Artifacts'
   addLabels: ['Area: Artifacts']
-  assign: ['animania4ka']
 
 # Area: C/C++
 - valueFor: '**Area for Triage**'
   contains: 'C/C++'
   addLabels: ['Area: C/C++']
-  assign: ['azuredaveops', 'wnjenkin']
 
 # Area: Containers
 - valueFor: '**Area for Triage**'
   contains: 'Containers'
   addLabels: ['Area: Containers']
-  assign: ['bryanmacfarlane']
 
 # Area: Databases
 - valueFor: '**Area for Triage**'
   contains: 'Databases'
   addLabels: ['Area: Databases']
-  assign: ['kmkumaran', 'RoopeshNair']
 
 # Area: Deployment/Release
 - valueFor: '**Area for Triage**'
   contains: 'Deployment/Release'
   addLabels: ['Area: Deployment/Release']
-  assign: ['kmkumaran', 'RoopeshNair']
 
 # Area: Erlang / Elixir
 - valueFor: '**Area for Triage**'
   contains: 'Erlang / Elixir'
   addLabels: ['Area: Erlang / Elixir']
-  assign: ['andymckay']
 
 # Area: Git
 - valueFor: '**Area for Triage**'
   contains: 'Git'
   addLabels: ['Area: Git']
-  assign: ['alepauly','thejoebourneidentity']
 
 # Area: Go
 - valueFor: '**Area for Triage**'
   contains: 'Go'
   addLabels: ['Area: Go']
-  assign: ['bishal-pdmsft', 'pulkitaggarwl']
 
 # Area: Haskell
 - valueFor: '**Area for Triage**'
   contains: 'Haskell'
   addLabels: ['Area: Haskell']
-  assign: ['andymckay']
 
 # Area: Java
 - valueFor: '**Area for Triage**'
   contains: 'Java'
   addLabels: ['Area: Java']
-  assign: ['leantk','vijayma']
 
 # Area: JavaScript and Node.js
 - valueFor: '**Area for Triage**'
   contains: 'JavaScript and Node.js'
   addLabels: ['Area: JavaScript and Node.js']
-  assign: ['bryanmacfarlane']
 
 # Area: Packages
 - valueFor: '**Area for Triage**'
   contains: 'Packages'
   addLabels: ['Area: Packages']
-  assign: ['johnterickson', 'animania4ka']
 
 # Area: PHP
 - valueFor: '**Area for Triage**'
   contains: 'PHP'
   addLabels: ['Area: PHP']
-  assign: ['alepauly', 'thejoebourneidentity']
 
 # Area: Python
 - valueFor: '**Area for Triage**'
   contains: 'Python'
   addLabels: ['Area: Python']
-  assign: ['madhurig']
 
 # Area: Ruby
 - valueFor: '**Area for Triage**'
   contains: 'Ruby'
   addLabels: ['Area: Ruby']
-  assign: ['zachariahcox']
 
 # Area: Rust
 - valueFor: '**Area for Triage**'
   contains: 'Rust'
   addLabels: ['Area: Rust']
-  assign: ['sergey-akhalkov']
 
 # Area: Scala
 - valueFor: '**Area for Triage**'
   contains: 'Scala'
   addLabels: ['Area: Scala']
-  assign: ['leantk','vijayma']
 
 # Area: Scripting and command line
 - valueFor: '**Area for Triage**'
   contains: 'Scripting and command line'
   addLabels: ['Area: Scripting and command line']
-  assign: ['zachariahcox','vtbassmatt']
 
 # Area: Servers
 - valueFor: '**Area for Triage**'
   contains: 'Servers'
   addLabels: ['Area: Servers']
-  assign: ['kmkumaran', 'RoopeshNair']
 
 # Area: SSH
 - valueFor: '**Area for Triage**'
   contains: 'SSH'
   addLabels: ['Area: SSH']
-  assign: ['zachariahcox','vtbassmatt']
 
 # Area: Testing and code coverage (incl. browser testing)
 - valueFor: '**Area for Triage**'
   contains: 'Testing and code coverage'
   addLabels: ['Area: Testing and code coverage']
-  assign: ['sadagopanrajaram','PBoraMSFT']
 
 # Area: Xamarin
 - valueFor: '**Area for Triage**'
   contains: 'Xamarin'
   addLabels: ['Area: Xamarin']
-  assign: ['sergey-akhalkov']
 
 # Types
 - valueFor: '**Question, Bug, or Feature?**'
   contains: Feature
-  addLabels: ['enhancement']
+  addLabels: ['feature request']
 - valueFor: '**Question, Bug, or Feature?**'
   contains: Bug
-  addLabels: ['bug']
+  addLabels: ['investigate']
 - valueFor: '**Question, Bug, or Feature?**'
   contains: Question
   addLabels: ['question']
@@ -183,10 +157,3 @@ nomatches:
   addLabels: ['Area: Packages']
 - contains: 'Docker'
   addLabels: ['Area: Deployment/Release']
-
-# always runs after rules.  look for missing or invalid sets of tags
-tags:
-- noneIn: ['bug', 'enhancement', 'question']
-  addLabels: ['needs triage']
-- noneMatch: '\s*Area:\s*([^]*)'
-  addLabels: ['needs triage']

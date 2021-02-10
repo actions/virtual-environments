@@ -3,6 +3,9 @@
 ##  Desc:  Install Azure CosmosDb Emulator
 ####################################################################################
 
-Import-Module -Name ImageHelpers -Force
+$InstallerName = "AzureCosmosDBEmulator.msi"
+$InstallerUrl = "https://aka.ms/cosmosdb-emulator"
 
-Install-MSI -MsiUrl "https://aka.ms/cosmosdb-emulator" -MsiName "AzureCosmosDBEmulator.msi"
+Install-Binary -Url $InstallerUrl -Name $InstallerName
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Azure Cosmos DB Emulator"

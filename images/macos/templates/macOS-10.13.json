@@ -1,0 +1,211 @@
+{
+    "variables": {
+        "vcenter_server": null,
+        "vcenter_username": null,
+        "vcenter_password": null,
+        "vcenter_datacenter": null,
+        "cluster_or_esxi_host": null,
+        "esxi_datastore": null,
+        "build_id": null,
+        "baseimage_name": null,
+        "output_folder": null,
+        "vm_username": null,
+        "vm_password": null,
+        "github_feed_token": null,
+        "xcode_install_user": null,
+        "xcode_install_password": null,
+        "image_os": "macos1013",
+        "announcements": "{{env `ANNOUNCEMENTS`}}"
+    },
+    "builders": [
+        {
+            "type": "vsphere-clone",
+            "vcenter_server": "{{user `vcenter_server`}}",
+            "username": "{{user `vcenter_username`}}",
+            "password": "{{user `vcenter_password`}}",
+            "insecure_connection": true,
+            "datacenter": "{{ user `vcenter_datacenter` }}",
+            "template": "{{ user `baseimage_name` }}",
+            "folder": "{{user `output_folder` }}",
+            "host": "{{user `cluster_or_esxi_host`}}",
+            "datastore": "{{user `esxi_datastore`}}",
+            "vm_name": "{{user `build_id`}}",
+            "ssh_username": "{{user `vm_username`}}",
+            "ssh_password": "{{user `vm_password`}}",
+            "CPUs": "10",
+            "RAM": "24576",
+            "NestedHV": "true",
+            "shutdown_timeout": "15m"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": "mkdir ~/image-generation"
+        },
+        {
+            "type": "file",
+            "source": "./tests",
+            "destination": "~/image-generation/"
+        },
+        {
+            "type": "file",
+            "source": "./software-report",
+            "destination": "~/image-generation/"
+        },
+        {
+            "type": "file",
+            "source": "./helpers",
+            "destination": "~/image-generation/"
+        },
+        {
+            "type": "file",
+            "source": "./provision/configuration/environment/bashrc",
+            "destination": "~/.bashrc"
+        },
+        {
+            "type": "file",
+            "source": "./provision/configuration/environment/bashprofile",
+            "destination": "~/.bash_profile"
+        },
+        {
+            "type": "file",
+            "source": "./provision/utils",
+            "destination": "~/"
+        },
+        {
+            "type": "file",
+            "source": "./provision/bootstrap-provisioner",
+            "destination": "~/bootstrap"
+        },
+        {
+            "type": "file",
+            "source": "./toolsets/toolset-10.13.json",
+            "destination": "~/image-generation/toolset.json"
+        },
+        {
+            "type": "file",
+            "source": "./toolsets/toolcache-10.13.json",
+            "destination": "~/image-generation/toolcache.json"
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+            "scripts": [
+                "./provision/configuration/add-network-interface-detection.sh",
+                "./provision/configuration/autologin.sh",
+                "./provision/configuration/disable-auto-updates.sh",
+                "./provision/configuration/screensaver-off.sh",
+                "./provision/configuration/ntpconf.sh",
+                "./provision/configuration/max-files.sh"
+            ],
+            "environment_vars": [
+                "PASSWORD={{user `vm_password`}}",
+                "USERNAME={{user `vm_username`}}"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+            "scripts": [
+                "./provision/configuration/preimagedata.sh",
+                "./provision/configuration/configure-ssh.sh",
+                "./provision/configuration/configure-machine.sh"
+            ],
+            "environment_vars": [
+                "IMAGE_VERSION={{user `build_id`}}",
+                "IMAGE_OS={{user `image_os`}}"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+            "script": "./provision/core/reboot.sh",
+            "expect_disconnect": true
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+            "pause_before": "30s",
+            "scripts": [
+                "./provision/core/homebrew.sh",
+                "./provision/core/dotnet.sh",
+                "./provision/core/python.sh",
+                "./provision/core/azcopy.sh",
+                "./provision/core/openssl.sh",
+                "./provision/core/ruby.sh",
+                "./provision/core/rubygem.sh",
+                "./provision/core/powershell.sh",
+                "./provision/core/git.sh",
+                "./provision/core/node.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+            "scripts": [
+                "./provision/core/xcode-tools.sh",
+                "./provision/core/xcode-sims.sh",
+                "./provision/core/build-xcode-symlinks.sh"
+            ],
+            "environment_vars": [
+                "XCODE_INSTALL_USER={{user `xcode_install_user`}}",
+                "XCODE_INSTALL_PASSWORD={{user `xcode_install_password`}}"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; sudo {{ .Vars }} {{ .Path }}",
+            "script": "./provision/core/reboot.sh",
+            "expect_disconnect": true
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+            "scripts": [
+                "./provision/core/commonutils.sh",
+                "./provision/core/openjdk.sh",
+                "./provision/core/php.sh",
+                "./provision/core/aws.sh",
+                "./provision/core/cocoapods.sh",
+                "./provision/core/android-toolsets.sh",
+                "./provision/core/xamarin.sh",
+                "./provision/core/xamarin-android-ndk.sh",
+                "./provision/core/vsmac.sh",
+                "./provision/core/nvm.sh",
+                "./provision/core/postgresql.sh",
+                "./provision/core/mongodb.sh",
+                "./provision/core/miniconda.sh",
+                "./provision/core/chrome.sh",
+                "./provision/core/edge.sh",
+                "./provision/core/firefox.sh",
+                "./provision/core/toolcache-high-sierra.sh",
+                "./provision/core/pypy.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "pwsh -File \"$HOME/image-generation/software-report/SoftwareReport.Generator.ps1\" -OutputDirectory \"$HOME/image-generation/output/software-report\" -ImageName {{user `build_id`}}",
+                "pwsh -File \"$HOME/image-generation/tests/Run-Tests.ps1\" -WorkingDirectory \"$HOME/image-generation/tests\" -OutputFile \"$HOME/image-generation/output/tests/test-results.xml\""
+            ],
+            "environment_vars": [
+                "ANNOUNCEMENTS={{user `announcements`}}"
+            ]
+        },
+        {
+            "type": "file",
+            "direction": "download",
+            "source": "~/image-generation/output/*",
+            "destination": "../image-output/"
+        },
+        {
+            "type": "shell",
+            "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} {{ .Path }}",
+            "scripts": [
+                "./provision/configuration/configure-hostname.sh",
+                "./provision/configuration/finalize-vm.sh"
+            ]
+        }
+    ]
+}

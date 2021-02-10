@@ -1,0 +1,20 @@
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily
+  branches:
+    include:
+    - main
+  always: true
+
+trigger: none
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - main
+
+jobs:
+- template: image-generation.yml
+  parameters:
+    image_type: ubuntu1604
+    image_readme_name: Ubuntu1604-README.md

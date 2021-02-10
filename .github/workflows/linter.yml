@@ -1,0 +1,25 @@
+# CI Validation
+
+name: CI
+
+on:
+  pull_request:
+    branches: [$default-branch]
+    
+jobs:
+  build:
+    name: Lint JSON & MD files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Lint Code Base
+        uses: github/super-linter@v3
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_JSON: true
+          VALIDATE_MD: true
+          DEFAULT_BRANCH: ${{ github.base_ref }}

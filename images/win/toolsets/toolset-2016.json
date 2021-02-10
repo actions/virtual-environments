@@ -1,0 +1,242 @@
+{
+    "toolcache": [
+        {
+            "name": "Python",
+            "url" : "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "win32",
+            "versions": [
+                "2.7.*",
+                "3.5.*",
+                "3.6.*",
+                "3.7.*",
+                "3.8.*",
+                "3.9.*"
+            ],
+            "default": "3.7.*"
+        },
+        {
+            "name": "Python",
+            "url" : "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+            "arch": "x86",
+            "platform" : "win32",
+            "versions": [
+                "2.7.*",
+                "3.5.*",
+                "3.6.*",
+                "3.7.*",
+                "3.8.*",
+                "3.9.*"
+            ]
+        },
+        {
+            "name": "PyPy",
+            "arch": "x86",
+            "platform" : "win32",
+            "versions": [
+                "2.7",
+                "3.6"
+            ]
+        },
+        {
+            "name": "node",
+            "url" : "https://raw.githubusercontent.com/actions/node-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "win32",
+            "versions": [
+                "8.*",
+                "10.*",
+                "12.*",
+                "14.*"
+            ]
+        },
+        {
+            "name": "go",
+            "url" : "https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "win32",
+            "versions": [
+                "1.9.*",
+                "1.10.*",
+                "1.11.*",
+                "1.12.*",
+                "1.13.*",
+                "1.14.*",
+                "1.15.*"
+            ],
+            "default": "1.14.*"
+        },
+        {
+            "name": "Boost",
+            "url" : "https://raw.githubusercontent.com/actions/boost-versions/main/versions-manifest.json",
+            "arch": "x86_64",
+            "platform" : "win32",
+            "toolset": "msvc14.1",
+            "versions": [
+                "1.69.0",
+                "1.72.0"
+            ]
+        }
+    ],
+    "powershellModules": [
+        {"name": "DockerMsftProvider"},
+        {"name": "MarkdownPS"},
+        {"name": "Pester"},
+        {"name": "PowerShellGet"},
+        {"name": "PSWindowsUpdate"},
+        {"name": "SqlServer"},
+        {"name": "VSSetup"}
+    ],
+    "azureModules": [
+        {
+            "name": "azurerm",
+            "versions": [
+                "2.1.0",
+                "3.8.0",
+                "4.2.1",
+                "5.1.1",
+                "6.7.0",
+                "6.13.1"
+            ],
+            "default": "2.1.0"
+        },
+        {
+            "name": "azure",
+            "versions": [
+                "2.1.0",
+                "3.8.0",
+                "4.2.1",
+                "5.1.1",
+                "5.3.0"
+            ],
+            "default": "2.1.0"
+        },
+        {
+            "name": "az",
+            "versions": [
+                "1.0.0",
+                "1.6.0",
+                "2.3.2",
+                "2.6.0",
+                "3.1.0",
+                "3.5.0",
+                "3.8.0",
+                "4.3.0",
+                "4.4.0",
+                "4.6.0",
+                "4.7.0"
+            ]
+        }
+    ],
+    "android": {
+        "platform_min_version": "19",
+        "build_tools_min_version": "19.1.0",
+        "extra_list": [
+            "android;m2repository",
+            "google;m2repository",
+            "google;google_play_services",
+            "m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2",
+            "m2repository;com;android;support;constraint;constraint-layout-solver;1.0.1",
+            "m2repository;com;android;support;constraint;constraint-layout;1.0.2",
+            "m2repository;com;android;support;constraint;constraint-layout;1.0.1"
+        ],
+        "addon_list": [
+            "addon-google_apis-google-24",
+            "addon-google_apis-google-23",
+            "addon-google_apis-google-22",
+            "addon-google_apis-google-21"
+        ],
+        "additional_tools": [
+            "cmake;3.6.4111459",
+            "cmake;3.10.2.4988404",
+            "patcher;v4",
+            "ndk-bundle"
+        ]
+    },
+    "visualStudio": {
+        "version" : "2017",
+        "subversion" : "15",
+        "edition" : "Enterprise",
+        "workloads": [
+            "Microsoft.Net.Component.4.6.2.SDK",
+            "Microsoft.Net.Component.4.6.2.TargetingPack",
+            "Microsoft.Net.ComponentGroup.4.6.2.DeveloperTools",
+            "Microsoft.Net.Component.4.7.SDK",
+            "Microsoft.Net.Component.4.7.TargetingPack",
+            "Microsoft.Net.ComponentGroup.4.7.DeveloperTools",
+            "Microsoft.Net.Component.4.7.1.SDK",
+            "Microsoft.Net.Component.4.7.1.TargetingPack",
+            "Microsoft.Net.ComponentGroup.4.7.1.DeveloperTools",
+            "Microsoft.Net.Component.4.7.2.SDK",
+            "Microsoft.Net.Component.4.7.2.TargetingPack",
+            "Microsoft.Net.ComponentGroup.4.7.2.DeveloperTools",
+            "Microsoft.Net.Core.Component.SDK.1x",
+            "Microsoft.NetCore.1x.ComponentGroup.Web",
+            "Microsoft.VisualStudio.Component.Azure.Storage.AzCopy",
+            "Microsoft.VisualStudio.Component.VC.140",
+            "Component.Dotfuscator",
+            "Microsoft.VisualStudio.Component.VC.ATL",
+            "Microsoft.VisualStudio.Component.VC.ATL.ARM",
+            "Microsoft.VisualStudio.Component.VC.ATL.ARM64",
+            "Microsoft.VisualStudio.Component.VC.ATLMFC",
+            "Microsoft.VisualStudio.Component.VC.ClangC2",
+            "Microsoft.VisualStudio.Component.VC.CLI.Support",
+            "Microsoft.VisualStudio.Component.VC.Modules.x86.x64",
+            "Microsoft.VisualStudio.Component.Windows10SDK.10240",
+            "Microsoft.VisualStudio.Component.Windows10SDK.10586",
+            "Microsoft.VisualStudio.Component.Windows10SDK.14393",
+            "Microsoft.VisualStudio.Component.Windows10SDK.15063.Desktop",
+            "Component.Unreal",
+            "Component.Unreal.Android",
+            "Component.Android.SDK23",
+            "Microsoft.VisualStudio.Component.TestTools.WebLoadTest",
+            "Microsoft.VisualStudio.Web.Mvc4.ComponentGroup",
+            "Component.Linux.CMake",
+            "Microsoft.Component.PythonTools.UWP",
+            "Microsoft.Component.VC.Runtime.OSSupport",
+            "Microsoft.VisualStudio.Component.VC.Tools.ARM",
+            "Microsoft.VisualStudio.ComponentGroup.UWP.VC",
+            "Microsoft.VisualStudio.Component.VSSDK",
+            "Microsoft.VisualStudio.Component.LinqToSql",
+            "Microsoft.VisualStudio.Component.TestTools.CodedUITest",
+            "Microsoft.VisualStudio.Component.TestTools.Core",
+            "Microsoft.VisualStudio.Component.TypeScript.2.0",
+            "Microsoft.VisualStudio.Component.TypeScript.2.1",
+            "Microsoft.VisualStudio.Component.TypeScript.2.2",
+            "Microsoft.VisualStudio.Component.VC.Tools.ARM64",
+            "Microsoft.VisualStudio.Component.Windows10SDK.16299.Desktop.arm",
+            "Microsoft.VisualStudio.Component.DslTools",
+            "Microsoft.VisualStudio.Component.Windows81SDK",
+            "Microsoft.VisualStudio.Component.WinXP",
+            "Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Win81",
+            "Microsoft.VisualStudio.ComponentGroup.NativeDesktop.WinXP",
+            "Microsoft.VisualStudio.ComponentGroup.ArchitectureTools.Managed",
+            "Microsoft.Component.Blend.SDK.WPF",
+            "Microsoft.Component.VC.Runtime.UCRTSDK",
+            "Microsoft.VisualStudio.Component.Sharepoint.Tools",
+            "Microsoft.VisualStudio.Component.TeamOffice",
+            "Microsoft.VisualStudio.Component.VC.ATL.Spectre",
+            "Microsoft.VisualStudio.Component.VC.ATL.ARM.Spectre",
+            "Microsoft.VisualStudio.Component.VC.ATL.ARM64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.ATLMFC.Spectre",
+            "Microsoft.VisualStudio.Component.Windows10SDK.17134",
+            "Microsoft.VisualStudio.Component.Windows10SDK.17763",
+            "Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.Runtimes.ARM.Spectre",
+            "Microsoft.VisualStudio.Component.VC.Runtimes.ARM64.Spectre",
+            "Microsoft.VisualStudio.Component.Workflow",
+            "Microsoft.VisualStudio.Workload.Office"
+        ],
+        "vsix": [
+        ]
+    },
+    "docker": {
+        "images": [
+            "mcr.microsoft.com/windows/servercore:ltsc2016",
+            "mcr.microsoft.com/windows/nanoserver:10.0.14393.953",
+            "mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2016",
+            "mcr.microsoft.com/dotnet/framework/runtime:4.8-windowsservercore-ltsc2016",
+            "microsoft/aspnetcore-build:1.0-2.0"
+        ]
+    }
+}

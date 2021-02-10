@@ -2,31 +2,39 @@
 ##  File:  Install-SeleniumWebDrivers.ps1
 ##  Desc:  Install Selenium Web Drivers
 ################################################################################
-$DestinationPath = "$($env:SystemDrive)\";
-$DriversZipFile = "SeleniumWebDrivers.zip"
-Write-Host "Destination path: [$DestinationPath]";
-Write-Host "Selenium drivers download and install...";
+
 try {
-    Invoke-WebRequest -UseBasicParsing -Uri "https://seleniumwebdrivers.blob.core.windows.net/seleniumwebdrivers/${DriversZipFile}" -OutFile $DriversZipFile;
+    $latestReleaseUrl = "https://selenium-release.storage.googleapis.com/"
+    $latestReleaseInfo = Invoke-RestMethod -Uri $latestReleaseUrl
+    $latestIEVersion = $latestReleaseInfo.ListBucketResult.Contents | Where-Object Key -match "IEDriverServer_x64" | Sort-Object LastModified | Select-Object -ExpandProperty Key -Last 1
+    $ieDriverUrl = -join ($latestReleaseUrl, $latestIEVersion)
+} catch {
+    Write-Error "[!] Failed to get IEDriver version [$latestReleaseUrl]: $_"
+    exit 1
+}
+
+# Download IE selenium driver
+try {
+    Write-Host "Selenium IEDriverServer download and install..."
+    $driverZipFile = Start-DownloadWithRetry -Url $ieDriverUrl -Name "SeleniumWebDrivers.zip"
 }
 catch {
-    Write-Error "[!] Failed to download $DriversZipFile";
-    exit 1;
+    Write-Error "[!] Failed to download $ieDriverUrl"
+    exit 1
 }
 
-$TempSeleniumDir = Join-Path $Env:TEMP "SeleniumWebDrivers"
-Expand-Archive -Path $DriversZipFile -DestinationPath $Env:TEMP -Force;
-Remove-Item $DriversZipFile;
-
-$SeleniumWebDriverPath = Join-Path $DestinationPath "SeleniumWebDrivers"
-$IEDriverPathTemp = Join-Path $TempSeleniumDir 'IEDriver'
-
-if (-not (Test-Path -Path $SeleniumWebDriverPath)) {
-    New-Item -Path $SeleniumWebDriverPath -ItemType "directory"
+$ieDriverPath = "C:\SeleniumWebDrivers\IEDriver"
+if (-not (Test-Path -Path $ieDriverPath)) {
+    $null = New-Item -Path $ieDriverPath -ItemType Directory -Force
 }
 
-Move-Item -Path "$IEDriverPathTemp" -Destination $SeleniumWebDriverPath
+Extract-7Zip -Path $driverZipFile -DestinationPath $ieDriverPath
+Remove-Item $driverZipFile
 
-Write-Host "Setting the environment variables"
+Write-Host "Get the IEDriver version..."
+(Get-Item "$ieDriverPath\IEDriverServer.exe").VersionInfo.FileVersion | Out-File -FilePath "$ieDriverPath\versioninfo.txt"
 
-setx IEWebDriver "C:\SeleniumWebDrivers\IEDriver" /M;
+Write-Host "Setting the IEWebDriver environment variables"
+setx IEWebDriver $ieDriverPath /M
+
+Invoke-PesterTests -TestFile "Browsers" -TestName "Internet Explorer"

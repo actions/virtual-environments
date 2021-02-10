@@ -1,0 +1,294 @@
+{
+    "toolcache": [
+        {
+            "name": "Python",
+            "url" : "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "win32",
+            "versions": [
+                "2.7.*",
+                "3.5.*",
+                "3.6.*",
+                "3.7.*",
+                "3.8.*",
+                "3.9.*"
+            ],
+            "default": "3.7.*"
+        },
+        {
+            "name": "Python",
+            "url" : "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+            "arch": "x86",
+            "platform" : "win32",
+            "versions": [
+                "2.7.*",
+                "3.5.*",
+                "3.6.*",
+                "3.7.*",
+                "3.8.*",
+                "3.9.*"
+            ]
+        },
+        {
+            "name": "PyPy",
+            "arch": "x86",
+            "platform" : "win32",
+            "versions": [
+                "2.7",
+                "3.6"
+            ]
+        },
+        {
+            "name": "node",
+            "url" : "https://raw.githubusercontent.com/actions/node-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "win32",
+            "versions": [
+                "8.*",
+                "10.*",
+                "12.*",
+                "14.*"
+            ]
+        },
+        {
+            "name": "go",
+            "url" : "https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "win32",
+            "versions": [
+                "1.9.*",
+                "1.10.*",
+                "1.11.*",
+                "1.12.*",
+                "1.13.*",
+                "1.14.*",
+                "1.15.*"
+            ],
+            "default": "1.14.*"
+        },
+        {
+            "name": "Boost",
+            "url" : "https://raw.githubusercontent.com/actions/boost-versions/main/versions-manifest.json",
+            "arch": "x86_64",
+            "platform" : "win32",
+            "toolset": "msvc14.1",
+            "versions": [
+                "1.69.0"
+            ]
+        },
+        {
+            "name": "Boost",
+            "url" : "https://raw.githubusercontent.com/actions/boost-versions/main/versions-manifest.json",
+            "arch": "x86_64",
+            "platform" : "win32",
+            "toolset": "msvc14.2",
+            "versions": [
+                "1.72.0"
+            ]
+        }
+    ],
+    "powershellModules": [
+        {"name": "DockerMsftProvider"},
+        {"name": "MarkdownPS"},
+        {"name": "Pester"},
+        {"name": "PowerShellGet"},
+        {"name": "PSWindowsUpdate"},
+        {"name": "SqlServer"},
+        {"name": "VSSetup"}
+    ],
+    "azureModules": [
+        {
+            "name": "azurerm",
+            "versions": [
+                "2.1.0",
+                "3.8.0",
+                "4.2.1",
+                "5.1.1",
+                "6.7.0",
+                "6.13.1"
+            ],
+            "default": "2.1.0"
+        },
+        {
+            "name": "azure",
+            "versions": [
+                "2.1.0",
+                "3.8.0",
+                "4.2.1",
+                "5.1.1",
+                "5.3.0"
+            ],
+            "default": "2.1.0"
+        },
+        {
+            "name": "az",
+            "versions": [
+                "1.0.0",
+                "1.6.0",
+                "2.3.2",
+                "2.6.0",
+                "3.1.0",
+                "3.5.0",
+                "3.8.0",
+                "4.3.0",
+                "4.4.0",
+                "4.6.0",
+                "4.7.0"
+            ]
+        }
+    ],
+    "android": {
+        "platform_min_version": "19",
+        "build_tools_min_version": "19.1.0",
+        "extra_list": [
+            "android;m2repository",
+            "google;m2repository",
+            "google;google_play_services",
+            "m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2",
+            "m2repository;com;android;support;constraint;constraint-layout-solver;1.0.1",
+            "m2repository;com;android;support;constraint;constraint-layout;1.0.2",
+            "m2repository;com;android;support;constraint;constraint-layout;1.0.1"
+        ],
+        "addon_list": [
+            "addon-google_apis-google-24",
+            "addon-google_apis-google-23",
+            "addon-google_apis-google-22",
+            "addon-google_apis-google-21"
+        ],
+        "additional_tools": [
+            "cmake;3.6.4111459",
+            "cmake;3.10.2.4988404",
+            "patcher;v4",
+            "ndk-bundle"
+        ]
+    },
+    "visualStudio": {
+        "version" : "2019",
+        "subversion" : "16",
+        "edition" : "Enterprise",
+        "workloads": [
+            "Component.Dotfuscator",
+            "Component.Linux.CMake",
+            "Component.UnityEngine.x64",
+            "Component.Unreal.Android",
+            "Microsoft.Component.Azure.DataLake.Tools",
+            "Microsoft.Component.PythonTools.Miniconda",
+            "Microsoft.Component.PythonTools.Web",
+            "Microsoft.Component.VC.Runtime.UCRTSDK",
+            "Microsoft.Net.ComponentGroup.4.6.2.DeveloperTools",
+            "Microsoft.Net.ComponentGroup.4.7.1.DeveloperTools",
+            "Microsoft.Net.Component.4.7.2.SDK",
+            "Microsoft.Net.Component.4.7.2.TargetingPack",
+            "Microsoft.Net.ComponentGroup.4.7.DeveloperTools",
+            "Microsoft.VisualStudio.Component.AspNet45",
+            "Microsoft.VisualStudio.Component.Azure.Kubernetes.Tools",
+            "Microsoft.VisualStudio.Component.Azure.ServiceFabric.Tools",
+            "Microsoft.VisualStudio.Component.Azure.Storage.AzCopy",
+            "Microsoft.VisualStudio.Component.Debugger.JustInTime",
+            "Microsoft.VisualStudio.Component.DslTools",
+            "Microsoft.VisualStudio.Component.EntityFramework",
+            "Microsoft.VisualStudio.Component.FSharp.Desktop",
+            "Microsoft.VisualStudio.Component.LinqToSql",
+            "Microsoft.VisualStudio.Component.SQL.SSDT",
+            "Microsoft.VisualStudio.Component.Sharepoint.Tools",
+            "Microsoft.VisualStudio.Component.PortableLibrary",
+            "Microsoft.VisualStudio.Component.TeamOffice",
+            "Microsoft.VisualStudio.Component.TestTools.CodedUITest",
+            "Microsoft.VisualStudio.Component.TestTools.WebLoadTest",
+            "Microsoft.VisualStudio.Component.UWP.VC.ARM64",
+            "Microsoft.VisualStudio.Component.VC.140",
+            "Microsoft.VisualStudio.Component.VC.ATL.ARM",
+            "Microsoft.VisualStudio.Component.VC.ATLMFC",
+            "Microsoft.VisualStudio.Component.VC.ATLMFC.Spectre",
+            "Microsoft.VisualStudio.Component.VC.CLI.Support",
+            "Microsoft.VisualStudio.Component.VC.CMake.Project",
+            "Microsoft.VisualStudio.Component.VC.DiagnosticTools",
+            "Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset",
+            "Microsoft.VisualStudio.Component.VC.MFC.ARM",
+            "Microsoft.VisualStudio.Component.VC.MFC.ARM.Spectre",
+            "Microsoft.VisualStudio.Component.VC.MFC.ARM64",
+            "Microsoft.VisualStudio.Component.VC.MFC.ARM64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.Redist.MSM",
+            "Microsoft.VisualStudio.Component.VC.Runtimes.ARM.Spectre",
+            "Microsoft.VisualStudio.Component.VC.Runtimes.ARM64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.Runtimes.x86.x64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.TestAdapterForBoostTest",
+            "Microsoft.VisualStudio.Component.VC.TestAdapterForGoogleTest",
+            "Microsoft.VisualStudio.Component.VC.v141.x86.x64",
+            "Microsoft.VisualStudio.Component.VC.v141.x86.x64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.ARM.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.ARM64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.ATL",
+            "Microsoft.VisualStudio.Component.VC.v141.ATL.ARM.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.ATL.ARM64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.ATL.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.MFC",
+            "Microsoft.VisualStudio.Component.VC.v141.MFC.ARM.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.MFC.ARM64.Spectre",
+            "Microsoft.VisualStudio.Component.VC.v141.MFC.Spectre",
+            "Microsoft.VisualStudio.Component.VC.14.25.x86.x64",
+            "Microsoft.VisualStudio.Component.Windows10SDK.16299",
+            "Microsoft.VisualStudio.Component.Windows10SDK.17134",
+            "Microsoft.VisualStudio.Component.Windows10SDK.17763",
+            "Microsoft.VisualStudio.Component.Windows10SDK.18362",
+            "Microsoft.VisualStudio.Component.Windows10SDK.19041",
+            "Microsoft.VisualStudio.Component.WinXP",
+            "Microsoft.VisualStudio.Component.Workflow",
+            "Microsoft.VisualStudio.ComponentGroup.Azure.CloudServices",
+            "Microsoft.VisualStudio.ComponentGroup.Azure.ResourceManager.Tools",
+            "Microsoft.VisualStudio.ComponentGroup.NativeDesktop.Llvm.Clang",
+            "Microsoft.VisualStudio.ComponentGroup.Web.CloudTools",
+            "Microsoft.VisualStudio.ComponentGroup.UWP.VC",
+            "Microsoft.VisualStudio.Workload.Azure",
+            "Microsoft.VisualStudio.Workload.Data",
+            "Microsoft.VisualStudio.Workload.DataScience",
+            "Microsoft.VisualStudio.Workload.ManagedDesktop",
+            "Microsoft.VisualStudio.Workload.ManagedGame",
+            "Microsoft.VisualStudio.Workload.NativeCrossPlat",
+            "Microsoft.VisualStudio.Workload.NativeDesktop",
+            "Microsoft.VisualStudio.Workload.NativeGame",
+            "Microsoft.VisualStudio.Workload.NativeMobile",
+            "Microsoft.VisualStudio.Workload.NetCoreTools",
+            "Microsoft.VisualStudio.Workload.NetCrossPlat",
+            "Microsoft.VisualStudio.Workload.NetWeb",
+            "Microsoft.VisualStudio.Workload.Node",
+            "Microsoft.VisualStudio.Workload.Office",
+            "Microsoft.VisualStudio.Workload.Python",
+            "Microsoft.VisualStudio.Workload.Universal",
+            "Microsoft.VisualStudio.Workload.VisualStudioExtension",
+            "Component.MDD.Linux",
+            "Component.MDD.Linux.GCC.arm"
+        ],
+        "vsix": [
+            {
+                "name": "Microsoft.DataTools.AnalysisServices.vsix",
+                "url": "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ProBITools/vsextensions/MicrosoftAnalysisServicesModelingProjects/2.9.5/vspackage",
+                "id": "04a86fc2-dbd5-4222-848e-911638e487fe"
+            },
+            {
+                "name": "Microsoft.DataTools.IntegrationServices.exe",
+                "url": "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/SSIS/vsextensions/SqlServerIntegrationServicesProjects/3.4/vspackage",
+                "id": "851E7A09-7B2B-4F06-A15D-BABFCB26B970"
+            },
+            {
+                "name": "Microsoft.DataTools.ReportingServices.vsix",
+                "url": "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ProBITools/vsextensions/MicrosoftReportProjectsforVisualStudio/2.6.3/vspackage",
+                "id": "717ad572-c4b7-435c-c166-c2969777f718"
+            },
+            {
+                "name": "Microsoft.VisualStudio.Installer.Projects.vsix",
+                "url": "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/latest/vspackage",
+                "id": "VSInstallerProjects"
+            }
+        ]
+    },
+    "docker": {
+        "images": [
+            "mcr.microsoft.com/windows/servercore:ltsc2019",
+            "mcr.microsoft.com/windows/nanoserver:1809",
+            "mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019",
+            "mcr.microsoft.com/dotnet/framework/runtime:4.8-windowsservercore-ltsc2019",
+            "microsoft/aspnetcore-build:1.0-2.0"
+        ]
+    }
+}

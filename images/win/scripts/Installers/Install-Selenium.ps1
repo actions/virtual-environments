@@ -20,16 +20,15 @@ $seleniumVersion = [version]::Parse($seleniumVersionString)
 Write-Host "Downloading selenium-server-standalone v$seleniumVersion..."
 
 $seleniumReleaseUrl = "https://selenium-release.storage.googleapis.com/$($seleniumVersion.ToString(2))/selenium-server-standalone-$($seleniumVersion.ToString(3)).jar"
-New-Item -ItemType directory -Path "C:\selenium\"
-$seleniumBinPath = "C:\selenium\selenium-server-standalone.jar"
-try {
-    Invoke-WebRequest -UseBasicParsing -Uri $seleniumReleaseUrl -OutFile $seleniumBinPath
-} catch {
-    Write-Error $_
-    exit 1
-}
+$seleniumDirectory = "C:\selenium\"
+$seleniumFileName = "selenium-server-standalone.jar"
+
+New-Item -ItemType directory -Path $seleniumDirectory
+
+Start-DownloadWithRetry -Url $seleniumReleaseUrl -Name $seleniumFileName -DownloadPath $seleniumDirectory
 
 Write-Host "Add selenium jar to the environment variables..."
+$seleniumBinPath = Join-Path $seleniumDirectory $seleniumFileName
 setx "SELENIUM_JAR_PATH" "$($seleniumBinPath)" /M
 
-exit 0
+Invoke-PesterTests -TestFile "Browsers" -TestName "Selenium"

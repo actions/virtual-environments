@@ -3,8 +3,6 @@
 ##  Desc:  Install vcpkg
 ################################################################################
 
-Import-Module -Name ImageHelpers -Force
-
 $Uri = 'https://github.com/Microsoft/vcpkg.git'
 $InstallDir = 'C:\vcpkg'
 $VcpkgExecPath = 'vcpkg.exe'
@@ -19,3 +17,5 @@ Invoke-Expression "$InstallDir\$VcpkgExecPath integrate install"
 Add-MachinePathItem $InstallDir
 $env:Path = Get-MachinePath
 setx VCPKG_INSTALLATION_ROOT $InstallDir /M
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Vcpkg"

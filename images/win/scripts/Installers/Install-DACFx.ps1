@@ -1,10 +1,11 @@
 ####################################################################################
 ##  File:  Install-DACFx.ps1
-##  Desc:  Install SQL Server® Data-Tier Application Framework (DACFx) for Windows
+##  Desc:  Install SQL Server® Data-Tier Application Framework (DacFx) for Windows
 ####################################################################################
 
-Import-Module -Name ImageHelpers -Force
+$InstallerName = "DacFramework.msi"
+$InstallerUrl = "https://go.microsoft.com/fwlink/?linkid=2143544"
 
-$exitcode = Install-MSI -MsiUrl "https://download.microsoft.com/download/f/1/9/f19eaee6-0728-4a0b-9755-9808acc8af0b/EN/x64/DacFramework.msi" -MsiName "DacFramework.msi"
+Install-Binary -Url $InstallerUrl -Name $InstallerName
 
-exit $exitcode
+Invoke-PesterTests -TestFile "Tools" -TestName "DACFx"

@@ -1,13 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 ################################################################################
 ##  File:  leiningen.sh
 ##  Desc:  Installs Leiningen
 ################################################################################
-
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
-
-set -e
 
 LEIN_BIN=/usr/local/bin/lein
 curl -s https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein > $LEIN_BIN
@@ -29,7 +24,3 @@ if ! command -v lein; then
 else
     lein new app testapp && rm -rf testapp
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Leiningen ($(lein -v))"

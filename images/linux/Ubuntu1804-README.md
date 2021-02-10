@@ -1,293 +1,230 @@
-# Ubuntu 18.04.4 LTS
-The following software is installed on machines with the 20200308.0 update.
+| Announcements |
+|-|
+| [Default Python will be switched to 3.8 on Ubuntu 20.04 on October, 6](https://github.com/actions/virtual-environments/issues/1591) |
+| [Clang/LLVM 10 will be set as a default one and Clang/LLVM 6 will be deprecated  for Ubuntu 20.04 on September, 23](https://github.com/actions/virtual-environments/issues/1536) |
 ***
+# Ubuntu 18.04.5 LTS
+- Image Version: 20201004.1
+
+## Installed Software
+### Language and Runtime
+- GNU C++ 7.5.0, 8.4.0, 9.3.0, 10.1.0
+- GNU Fortran 7.5.0, 8.4.0, 9.3.0
+- Clang 6.0.0, 8.0.0, 9.0.0
+- Erlang 11.1
+- Mono 6.12.0.90
+- Node 12.18.4
+- Python 2.7.17
+- Python3 3.6.9
+- PowerShell 7.0.3
+- Ruby 2.5.1p57
+- Swift 5.3
+- Julia 1.5.2
+
+### Package Management
+- Homebrew 2.5.2
+- Gem 3.1.4
+- Miniconda 4.8.3
+- Helm 
+- Npm 6.14.8
+- Yarn 
+- Pip 9.0.1
+- Pip3 9.0.1
+- Vcpkg 2020.06.15
+
+### Project Management
+- Ant 1.10.5
+- Gradle 6.6.1
+- Maven 3.6.3
+- Sbt 1.3.13
+
+### Tools
 - 7-Zip 16.02
-- Ansible (ansible 2.9.6)
-- AzCopy (azcopy 7.3.0-netcore)
-- Azure CLI (azure-cli                          2.1.0)
-- Azure CLI (azure-devops                      0.17.0)
-- Basic CLI:
-  - curl
-  - dnsutils
-  - file
-  - ftp
-  - iproute2
-  - iputils-ping
-  - jq
-  - libcurl3
-  - libicu55
-  - libunwind8
-  - locales
-  - netcat
-  - openssh-client
-  - parallel
-  - rsync
-  - shellcheck
-  - sudo
-  - telnet
-  - time
-  - tzdata
-  - unzip
-  - upx
-  - wget
-  - zip
-  - zstd
-- AWS CLI (aws-cli/1.18.16 Python/2.7.17 Linux/5.0.0-1032-azure botocore/1.15.16)
-- build-essential
-- Clang 6.0 (6.0.1)
-- Clang 8 (8.0.1)
-- Clang 9 (9.0.0)
-- CMake (cmake version 3.16.2)
-- Docker Compose (docker-compose version 1.22.0, build f46880fe)
-- Docker-Moby (Docker version 3.0.10+azure, build 99c5edceb48d64c1aa5d09b8c9c499d431d98bb9)
-- .NET Core SDK:
-  - 3.1.101
-  - 3.1.100
-  - 3.0.103
-  - 3.0.102
-  - 3.0.101
-  - 3.0.100
-  - 2.2.402
-  - 2.2.401
-  - 2.2.301
-  - 2.2.300
-  - 2.2.207
-  - 2.2.206
-  - 2.2.205
-  - 2.2.204
-  - 2.2.203
-  - 2.2.202
-  - 2.2.110
-  - 2.2.109
-  - 2.2.108
-  - 2.2.107
-  - 2.2.106
-  - 2.2.105
-  - 2.2.104
-  - 2.2.103
-  - 2.2.102
-  - 2.2.101
-  - 2.2.100
-  - 2.1.804
-  - 2.1.803
-  - 2.1.802
-  - 2.1.801
-  - 2.1.701
-  - 2.1.700
-  - 2.1.609
-  - 2.1.608
-  - 2.1.607
-  - 2.1.606
-  - 2.1.605
-  - 2.1.604
-  - 2.1.603
-  - 2.1.602
-  - 2.1.512
-  - 2.1.511
-  - 2.1.510
-  - 2.1.509
-  - 2.1.508
-  - 2.1.507
-  - 2.1.506
-  - 2.1.505
-  - 2.1.504
-  - 2.1.503
-  - 2.1.502
-  - 2.1.500
-  - 2.1.403
-  - 2.1.402
-  - 2.1.401
-  - 2.1.302
-  - 2.1.301
-  - 2.1.300
-- Erlang (Erlang (SMP,ASYNC_THREADS,HIPE) (BEAM) emulator version 10.6.4)
-- Firefox (Mozilla Firefox 73.0.1)
-- Geckodriver (0.26.0); Gecko Driver is available via GECKOWEBDRIVER environment variable
-- GNU C++ 7.4.0
-- GNU C++ 8.3.0
-- GNU C++ 9.2.1
-- GNU Fortran 8.3.0
-- GNU Fortran 9.2.1
-- Git (2.25.1)
-- Git Large File Storage (LFS) (2.10.0)
-- Go 1.11 (go version go1.11.12 linux/amd64)
-- Go 1.12 (go version go1.12.7 linux/amd64)
-- Go 1.13 (go version go1.13 linux/amd64)
-- Google Chrome (Google Chrome 80.0.3987.132 )
-- ChromeDriver 80.0.3987.106 (f68069574609230cf9b635cd784cfb1bf81bb53a-refs/branch-heads/3987@{#882}); Chrome Driver is available via CHROMEWEBDRIVER environment variable
-- Google Cloud SDK (283.0.0)
-- Haskell Cabal (cabal-install version 2.0.0.1
-compiled using version 2.0.1.1 of the Cabal library )
-- Haskell Cabal (cabal-install version 2.2.0.0
-compiled using version 2.2.0.1 of the Cabal library )
-- Haskell Cabal (cabal-install version 2.4.1.0
-compiled using version 2.4.1.0 of the Cabal library )
-- Haskell Cabal (cabal-install version 3.0.1.0
-compiled using version 3.0.2.0 of the Cabal library )
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.0.2)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.2.2)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.4.4)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.6.2)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.6.3)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.6.4)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.6.5)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.8.1)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.8.2)
-- GHC (The Glorious Glasgow Haskell Compilation System, version 8.8.3)
-- Haskell Stack (Version 2.1.3, Git revision 636e3a759d51127df2b62f90772def126cdf6d1f (7735 commits) x86_64 hpack-0.31.2)
-- Heroku (heroku/7.39.0 linux-x64 node-v12.13.0)
-- HHVM (HipHop VM 4.47.0 (rel))
-- ImageMagick
-- Azul Zulu OpenJDK (7) (openjdk version "1.7.0_252")
-- Azul Zulu OpenJDK (8) (openjdk version "1.8.0_242")
-- Azul Zulu OpenJDK (11) (openjdk version "11.0.6" 2020-01-14 LTS)
-- Azul Zulu OpenJDK (12) (openjdk version "12.0.2" 2019-07-16)
-- Ant (Apache Ant(TM) version 1.10.5 compiled on March 28 2019)
-- Gradle 6.2.2
-- Maven (Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f))
-- Kind (kind v0.7.0 go1.13.6 linux/amd64)
-- kubectl (Client Version: v1.17.3)
-- helm (v3.1.1+gafe7058)
-- Leiningen (Leiningen 2.9.1 on Java 1.8.0_242 OpenJDK 64-Bit Server VM)
-- Mercurial (Mercurial Distributed SCM (version 4.5.3))
-- Miniconda (conda 4.7.12)
-- Mono (Mono JIT compiler version 6.8.0.105 (tarball Tue Feb  4 21:20:20 UTC 2020))
-- MySQL (mysql  Ver 14.14 Distrib 5.7.29, for Linux (x86_64) using  EditLine wrapper)
+- Ansible 2.9.13
+- AzCopy10 10.6.0 (available by `azcopy10` alias)
+- AzCopy7 7.3.0 (available by `azcopy` alias)
+- Bazel 3.5.1
+- Bazelisk 1.6.1
+- Buildah 
+- CMake 3.17.0
+- CodeQL Action Bundle 2.2.5
+- curl 7.58.0
+- Docker Compose 1.27.4
+- Docker-Buildx 0.4.2
+- Docker-Moby 19.03.13
+- Git 2.28.0
+- Git LFS 2.12.0
+- Git-ftp 1.3.1
+- Google Cloud SDK 312.0.0
+- Haveged 1.9.1
+- Heroku 7.44.0
+- HHVM (HipHop VM) 4.77.0
+- jq 1.5
+- Kind 0.9.0
+- Kubectl 1.19.2
+- Kustomize 3.8.4
+- Leiningen 2.9.4
+- m4 1.4.18
+- Mercurial 4.5.3
+- Minikube 1.13.1
+- Newman 5.2.0
+- nvm 0.35.3
+- Packer 1.6.4
+- PhantomJS 2.1.1
+- Podman 
+- Pulumi 2.11.2
+- R 4.0.2
+- Skopeo 1.2.0
+- Sphinx Open Source Search Server 2.2.11
+- SVN 1.9.7
+- Swig 3.0.12
+- Terraform 0.13.4
+- unzip 6.00
+- wget 1.19.4
+- zip 3.0
+- zstd 1.3.3
+
+### CLI Tools
+- Alibaba Cloud CLI 3.0.59
+- AWS CLI 1.18.152
+- AWS CLI Session manager plugin 1.1.61.0
+- AWS SAM CLI 1.4.0
+- Azure CLI (azure-cli) 2.12.1
+- Azure CLI (azure-devops) 0.18.0
+- GitHub CLI 
+- Hub CLI 2.14.2
+- Netlify CLI 2.64.1
+- oc CLI 4.5.0
+- ORAS CLI 0.8.1
+- Vercel CLI 20.1.1
+
+### Java
+| Version             | Vendor       | Environment Variable |
+| ------------------- | ------------ | -------------------- |
+| 1.7.0_272           | Zulu         | JAVA_HOME_7_X64      |
+| 1.8.0_265 (default) | AdoptOpenJDK | JAVA_HOME_8_X64      |
+| 11.0.8              | AdoptOpenJDK | JAVA_HOME_11_X64     |
+| 12.0.2              | AdoptOpenJDK | JAVA_HOME_12_X64     |
+
+### PHP
+| Tool     | Version                     |
+| -------- | --------------------------- |
+| PHP      | 7.1.33 7.2.33 7.3.22 7.4.10 |
+| Composer | 1.10.13                     |
+| PHPUnit  | 7.5.20                      |
+
+### Haskell
+- GHC 8.10.2
+- Cabal 3.4.0.0
+- Stack 2.3.3
+
+### Rust Tools
+- Rust 1.46.0
+- Rustup 1.22.1
+- Rustdoc 1.46.0
+- Cargo 1.46.0
+
+#### Packages
+- Bindgen 0.55.1
+- Cargo audit 0.12.1
+- Cargo outdated 0.9.11
+- Cargo clippy 0.0.212
+- Cbindgen 0.14.6
+- Rustfmt 1.4.18
+
+### Browsers and Drivers
+- Google Chrome 85.0.4183.121
+- ChromeDriver 85.0.4183.87
+- Mozilla Firefox 81.0
+- Geckodriver 0.27.0
+
+### .NET Core SDK
+- 2.1.300 2.1.301 2.1.302 2.1.401 2.1.402 2.1.403 2.1.500 2.1.502 2.1.503 2.1.504 2.1.505 2.1.506 2.1.507 2.1.508 2.1.509 2.1.510 2.1.511 2.1.512 2.1.513 2.1.514 2.1.515 2.1.516 2.1.517 2.1.518 2.1.602 2.1.603 2.1.604 2.1.605 2.1.606 2.1.607 2.1.608 2.1.609 2.1.610 2.1.611 2.1.612 2.1.613 2.1.614 2.1.615 2.1.700 2.1.701 2.1.801 2.1.802 2.1.803 2.1.804 2.1.805 2.1.806 2.1.807 2.1.808 2.1.809 2.1.810 3.0.100 3.0.101 3.0.102 3.0.103 3.1.100 3.1.101 3.1.102 3.1.103 3.1.104 3.1.105 3.1.106 3.1.107 3.1.108 3.1.200 3.1.201 3.1.202 3.1.300 3.1.301 3.1.302 3.1.401 3.1.402
+
+### Az Module
+- 1.0.0 1.6.0 2.3.2 2.6.0 2.8.0 3.1.0 3.5.0 3.8.0 4.3.0 4.4.0 4.6.0 4.7.0
+
+### Databases
+- Postgre SQL 13.0
+- MongoDB 4.4.1
+- sqlite3 3.22.0
+
+#### MySQL
+- MySQL 5.7.31
 - MySQL Server (user:root password:root)
 - MS SQL Server Client Tools
-- Node.js (v12.16.1)
-- Grunt (grunt-cli v1.2.0)
-- Gulp (CLI version: 2.2.0
-Local version: Unknown)
-- n (6.3.1)
-- Parcel (1.12.4)
-- TypeScript (Version 3.8.3)
-- Webpack (4.42.0)
-- Webpack CLI (3.3.11)
-- Yarn (1.22.1)
-- Bazel (bazel 2.2.0)
-- Bazelisk (1.3.0)
-- PhantomJS (2.1.1)
-- PHP 7.1 (PHP 7.1.33-12+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Feb 23 2020 07:22:16) ( NTS ))
-- PHP 7.2 (PHP 7.2.28-3+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Feb 23 2020 07:23:25) ( NTS ))
-- PHP 7.3 (PHP 7.3.15-3+ubuntu18.04.1+deb.sury.org+1 (cli) (built: Feb 23 2020 07:23:33) ( NTS ))
-- PHP 7.4 (PHP 7.4.3 (cli) (built: Feb 23 2020 07:24:28) ( NTS ))
-- Composer  (Composer version 1.9.3 2020-02-04 12:58:49)
-- PHPUnit (PHPUnit 7.5.20 by Sebastian Bergmann and contributors.)
-- Pollinate
-- psql (PostgreSQL) 10.12
-- Powershell (PowerShell 7.0.0)
-- ruby (2.5.1p57)
-- gem (3.1.2)
-- rustup (1.21.1)
-- rust (1.41.1)
-- cargo (1.41.0)
-- rustfmt (1.4.11-stable)
-- clippy (0.0.212)
-- rustdoc (1.41.1)
-- bindgen (execute
-the
-0.53.1)
-- cbindgen (0.13.1)
-- Julia (julia version 1.3.1)
-- sbt (1.3.8)
-- Selenium server standalone (available via SELENIUM_JAR_PATH environment variable)
-- Sphinx Open Source Search Server
-- Subversion (svn, version 1.9.7 (r1800392))
-- Terraform (Terraform v0.12.23)
-- Packer (1.5.4)
-- Vcpkg 2020.02.04-unknownhash
-- Zeit Now CLI (17.0.4)
-- Google Repository 58
-- Google Play services 49
-- Google APIs 24
-- Google APIs 23
-- Google APIs 22
-- Google APIs 21
-- CMake 3.6.4111459
-- Android Support Repository 47.0.0
-- Android SDK Platform-Tools 29.0.6
-- Android SDK Platform 29
-- Android SDK Platform 28
-- Android SDK Platform 27
-- Android SDK Platform 26
-- Android SDK Platform 25
-- Android SDK Platform 24
-- Android SDK Platform 23
-- Android SDK Platform 22
-- Android SDK Platform 21
-- Android SDK Platform 19
-- Android SDK Platform 17
-- Android SDK Patch Applier v4
-- Android SDK Build-Tools 29.0.3
-- Android SDK Build-Tools 29.0.2
-- Android SDK Build-Tools 29.0.0
-- Android SDK Build-Tools 28.0.3
-- Android SDK Build-Tools 28.0.2
-- Android SDK Build-Tools 28.0.1
-- Android SDK Build-Tools 28.0.0
-- Android SDK Build-Tools 27.0.3
-- Android SDK Build-Tools 27.0.2
-- Android SDK Build-Tools 27.0.1
-- Android SDK Build-Tools 27.0.0
-- Android SDK Build-Tools 26.0.3
-- Android SDK Build-Tools 26.0.2
-- Android SDK Build-Tools 26.0.1
-- Android SDK Build-Tools 26.0.0
-- Android SDK Build-Tools 25.0.3
-- Android SDK Build-Tools 25.0.2
-- Android SDK Build-Tools 25.0.1
-- Android SDK Build-Tools 25.0.0
-- Android SDK Build-Tools 24.0.3
-- Android SDK Build-Tools 24.0.2
-- Android SDK Build-Tools 24.0.1
-- Android SDK Build-Tools 24.0.0
-- Android SDK Build-Tools 23.0.3
-- Android SDK Build-Tools 23.0.2
-- Android SDK Build-Tools 23.0.1
-- Android SDK Build-Tools 22.0.1
-- Android SDK Build-Tools 21.1.2
-- Android SDK Build-Tools 20.0.0
-- Android SDK Build-Tools 19.1.0
-- Android SDK Build-Tools 17.0.0
-- Android NDK 21.0.6113669
-- Az Module (1.0.0)
-- Az Module (1.6.0)
-- Az Module (2.3.2)
-- Az Module (2.6.0)
-- Az Module (2.8.0)
-- Az Module (3.1.0)
-- Az Module (3.5.0)
-- Cached container images
-  - node:10 (Digest: sha256:df200903ff34c07c1b9112b4fd9d1342c11eb7d99525f2b366c487f91dda8131)
-  - node:12 (Digest: sha256:facc1cbde6e5aa3255092b1a1417451953c80bd31ab5a4403f8bcd90b90a8407)
-  - buildpack-deps:stretch (Digest: sha256:dc901bbf4b34e4ca8771c0d0773e557221452f97bcf0c732de7ecda3782bdf97)
-  - debian:9 (Digest: sha256:ddb131307ad9c70ebf8c7962ba73c20101f68c7a511915aea3ad3b7ad47b9d20)
-  - debian:8 (Digest: sha256:2c9b2323299846c5298c12db373da310f8114f2941ae3f496e95270cc8ca5ebd)
-  - node:10-alpine (Digest: sha256:e8d05985dd93c380a83da00d676b081dad9cce148cb4ecdf26ed684fcff1449c)
-  - node:12-alpine (Digest: sha256:bba77d0ca8820b43af898b3c50d4e8b68dc703ebbd958319af2f21f2d3c309f5)
-  - alpine:3.8 (Digest: sha256:2bb501e6173d9d006e56de5bce2720eb06396803300fe1687b58a7ff32bf4c14)
-  - alpine:3.9 (Digest: sha256:115731bab0862031b44766733890091c17924f9b7781b79997f5f163be262178)
-  - alpine:3.10 (Digest: sha256:7c3773f7bcc969f03f8f653910001d99a9d324b4b9caa008846ad2c3089f5a5f)
-  - jekyll/builder:latest (Digest: sha256:875de39aa06300c749e26a79f39cdfa31404e4f2dbd2953cd4ebb0442bffda9e)
-  - alpine:3.7 (Digest: sha256:8421d9a84432575381bfabd248f1eb56f3aa21d9d7cd2511583c68c9b7511d10)
-  - mcr.microsoft.com/azure-pipelines/node8-typescript:latest (Digest: sha256:e52e60b9f71183969830a3664279b5d8c799b4b0ec2c25a0686f7c02f6a9669a)
-- Python:
-  - Python 2.7.17
-  - Python 3.5.9
-  - Python 3.6.10
-  - Python 3.7.6
-  - Python 3.8.2
-- Ruby:
-  - Ruby 2.4.9
-  - Ruby 2.5.7
-  - Ruby 2.6.5
-  - Ruby 2.7.0
-- PyPy:
-  - PyPy 2.7.17
-  - PyPy 3.6.9
-- Python (Python 2.7.17)
-- pip (pip 9.0.1 from /usr/lib/python2.7/dist-packages (python 2.7))
-- Python3 (Python 3.6.9)
-- pip3 (pip 9.0.1 from /usr/lib/python3/dist-packages (python 3.6))
-- Boost C++ Libraries 1.69.0
+
+```
+    MySQL service is disabled by default. Use the following command as a part of your job to start the service: 'sudo systemctl start mysql.service'
+```
+### Cached Tools
+#### Ruby
+- 2.4.10
+- 2.5.8
+- 2.6.6
+- 2.7.1
+
+#### Python
+- 2.7.18
+- 3.5.10
+- 3.6.12
+- 3.7.9
+- 3.8.6
+
+#### PyPy
+- 2.7.13 [PyPy 7.3.2]
+- 3.6.9 [PyPy 7.3.2]
+
+#### Node.js
+- 8.17.0
+- 10.22.1
+- 12.18.4
+- 14.13.0
+
+#### Go
+- 1.11.13
+- 1.12.17
+- 1.13.15
+- 1.14.9
+- 1.15.2
+
+#### Boost
+- 1.69.0
+- 1.72.0
+
+### Android
+| Package Name               | Version                                                                                                                                                                                                                                                                           |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Android SDK Platform-Tools | 30.0.4                                                                                                                                                                                                                                                                            |
+| Android SDK Tools          | 26.1.1                                                                                                                                                                                                                                                                            |
+| Android SDK Platforms      | android-30 (rev 3)<br>android-29 (rev 5)<br>android-28 (rev 6)<br>android-27 (rev 3)<br>android-26 (rev 2)<br>android-25 (rev 3)<br>android-24 (rev 2)<br>android-23 (rev 3)<br>android-22 (rev 2)<br>android-21 (rev 2)<br>android-19 (rev 4)<br>android-17 (rev 3)              |
+| Android SDK Build-tools    | 30.0.0 30.0.1 30.0.2<br>29.0.0 29.0.2 29.0.3<br>28.0.0 28.0.1 28.0.2 28.0.3<br>27.0.0 27.0.1 27.0.2 27.0.3<br>26.0.0 26.0.1 26.0.2 26.0.3<br>25.0.0 25.0.1 25.0.2 25.0.3<br>24.0.0 24.0.1 24.0.2 24.0.3<br>23.0.1 23.0.2 23.0.3<br>22.0.1<br>21.1.2<br>20.0.0<br>19.1.0<br>17.0.0 |
+| Google APIs                | addon-google_apis-google-21<br>addon-google_apis-google-22<br>addon-google_apis-google-23<br>addon-google_apis-google-24                                                                                                                                                          |
+| NDK                        | 21.3.6528147                                                                                                                                                                                                                                                                      |
+| Android Support Repository | 47.0.0                                                                                                                                                                                                                                                                            |
+| Google Play services       | 49                                                                                                                                                                                                                                                                                |
+| Google Repository          | 58                                                                                                                                                                                                                                                                                |
+| SDK Patch Applier v4       | 1                                                                                                                                                                                                                                                                                 |
+| CMake                      | 3.10.2<br>3.6.4111459                                                                                                                                                                                                                                                             |
+
+### Cached Docker images
+- alpine:3.7
+- alpine:3.8
+- alpine:3.9
+- alpine:3.10
+- buildpack-deps:stretch
+- buildpack-deps:buster
+- debian:8
+- debian:9
+- jekyll/builder
+- mcr.microsoft.com/azure-pipelines/node8-typescript
+- node:10
+- node:12
+- node:10-alpine
+- node:12-alpine
+- ubuntu:14.04
+
+### Installed apt packages
+- bison, brotli, bzip2, curl, dbus, dnsutils, dpkg, fakeroot, file, flex, ftp, gnupg2, iproute2, iputils-ping, jq, lib32z1, libc++-dev, libc++abi-dev, libcurl3, libgbm-dev, libgconf-2-4, libgtk-3-0, libsecret-1-dev, libsqlite3-dev, libunwind8, libxkbfile-dev, libxss1, locales, m4, netcat, openssh-client, parallel, patchelf, pkg-config, rpm, rsync, shellcheck, sqlite3, ssh, sudo, telnet, texinfo, time, tk, tzdata, unzip, upx, wget, xorriso, xvfb, xz-utils, yamllint, zip, zstd, zsync
+
+

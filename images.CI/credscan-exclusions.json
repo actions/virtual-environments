@@ -1,0 +1,9 @@
+{
+    "tool": "Credential Scanner",
+    "suppressions": [
+    {
+        "placeholder": "P@ssword!!",
+        "_justification": "Password used by SQL Express. It is required to interact with database."
+    }
+  ]
+}

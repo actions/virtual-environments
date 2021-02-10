@@ -3,9 +3,7 @@
 ##  Desc:  Install WIX.
 ################################################################################
 
-Import-Module -Name ImageHelpers -Force;
-
-choco install wixtoolset -y --force
+Choco-Install -PackageName wixtoolset -ArgumentList "--force"
 
 if(Test-IsWin19)
 {
@@ -21,3 +19,5 @@ else
 $extensionName = "Votive$VSver.vsix"
 #Installing VS extension 'Wix Toolset Visual Studio Extension'
 Install-VsixExtension -Url $extensionUrl -Name $extensionName -VSversion $VSver
+
+Invoke-PesterTests -TestFile "Wix"

@@ -3,23 +3,23 @@
 ##  Desc:  Install Google Chrome
 ################################################################################
 
-Import-Module -Name ImageHelpers -Force;
+# Download and install latest Chrome browser
+$ChromeInstallerFile = "chrome_installer.exe"
+$ChromeInstallerUrl = "https://dl.google.com/chrome/install/375.126/${ChromeInstallerFile}"
+Install-Binary -Url $ChromeInstallerUrl -Name $ChromeInstallerFile -ArgumentList ("/silent", "/install")
 
-$ChromeInstallerFile = "chrome_installer.exe";
-$ChromeInstallerUri = "https://dl.google.com/chrome/install/375.126/${ChromeInstallerFile}";
-Install-Exe -Url $ChromeInstallerUri -Name $ChromeInstallerFile -ArgumentList ("/silent", "/install")
+# Prepare firewall rules
+Write-Host "Adding the firewall rule for Google update blocking..."
+New-NetFirewallRule -DisplayName "BlockGoogleUpdate" -Direction Outbound -Action Block -Program "C:\Program Files (x86)\Google\Update\GoogleUpdate.exe"
 
-Write-Host "Adding the firewall rule for Google update blocking";
-New-NetFirewallRule -DisplayName "BlockGoogleUpdate" -Direction Outbound -Action Block -Program "C:\Program Files (x86)\Google\Update\GoogleUpdate.exe";
+$GoogleSvcs = ('gupdate','gupdatem')
+$GoogleSvcs | Stop-SvcWithErrHandling -StopOnError
+$GoogleSvcs | Set-SvcWithErrHandling -Arguments @{StartupType = "Disabled"}
 
-$GoogleSvcs = ('gupdate','gupdatem');
-$GoogleSvcs | Stop-SvcWithErrHandling -StopOnError;
-$GoogleSvcs | Set-SvcWithErrHandling -Arguments @{StartupType = "Disabled"};
-
-$regGoogleUpdatePath = "HKLM:\SOFTWARE\Policies\Google\Update";
-$regGoogleUpdateChrome = "HKLM:\SOFTWARE\Policies\Google\Chrome";
+$regGoogleUpdatePath = "HKLM:\SOFTWARE\Policies\Google\Update"
+$regGoogleUpdateChrome = "HKLM:\SOFTWARE\Policies\Google\Chrome"
 ($regGoogleUpdatePath, $regGoogleUpdateChrome) | ForEach-Object {
-    New-Item -Path $_ -Force;
+    New-Item -Path $_ -Force
 }
 
 $regGoogleParameters = @(
@@ -31,52 +31,47 @@ $regGoogleParameters = @(
 )
 
 $regGoogleParameters | ForEach-Object {
-    $Arguments = $_;
-    if (-not ($Arguments.Path)) {
-        $Arguments.Add("Path", $regGoogleUpdatePath);
+    $Arguments = $_
+    if (-not ($Arguments.Path))
+    {
+        $Arguments.Add("Path", $regGoogleUpdatePath)
     }
-    $Arguments.Add("Force", $true);
-    New-ItemProperty @Arguments;
+    $Arguments.Add("Force", $true)
+    New-ItemProperty @Arguments
 }
 
-# Reinstall Chrome Web Driver
-Write-Host "Install Chrome WebDriver"
-$DestinationPath = "$($env:SystemDrive)\";
-$ChromeDriverPath = "${DestinationPath}SeleniumWebDrivers\ChromeDriver";
-
-if (-not (Test-Path -Path $ChromeDriverPath)) {
-    New-Item -Path $ChromeDriverPath -ItemType "directory"
+# Install Chrome WebDriver
+Write-Host "Install Chrome WebDriver..."
+$ChromeDriverPath = "$($env:SystemDrive)\SeleniumWebDrivers\ChromeDriver"
+if (-not (Test-Path -Path $ChromeDriverPath))
+{
+    New-Item -Path $ChromeDriverPath -ItemType Directory -Force
 }
 
+Write-Host "Get the Chrome WebDriver version..."
 $RegistryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths"
-$ChromePath = (Get-ItemProperty "$RegistryPath\chrome.exe").'(default)';
-[version]$ChromeVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($ChromePath).ProductVersion;
-Write-Host "Chrome version: [$ChromeVersion]";
+$ChromePath = (Get-ItemProperty "$RegistryPath\chrome.exe").'(default)'
+[version]$ChromeVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($ChromePath).ProductVersion
+$ChromeDriverVersionUrl = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$($ChromeVersion.Major).$($ChromeVersion.Minor).$($ChromeVersion.Build)"
 
-$ChromeDriverVersionUri = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$($ChromeVersion.Major).$($ChromeVersion.Minor).$($ChromeVersion.Build)";
-Write-Host "Chrome driver version Uri [$ChromeDriverVersionUri]";
-Write-Host "Getting the Chrome driver version...";
-$ChromeDriverVersion = Invoke-WebRequest -Uri $ChromeDriverVersionUri;
-Write-Host "Current Chrome driver version: [$ChromeDriverVersion]";
+$ChromeDriverVersionFile = Start-DownloadWithRetry -Url $ChromeDriverVersionUrl -Name "versioninfo.txt" -DownloadPath $ChromeDriverPath
 
-$ChromeDriverZipDownloadUri = "https://chromedriver.storage.googleapis.com/$($ChromeDriverVersion.ToString())/chromedriver_win32.zip";
-Write-Host "Chrome driver zip file download Uri: [$ChromeDriverZipDownloadUri]";
+Write-Host "Download Chrome WebDriver..."
+$ChromeDriverVersion = Get-Content -Path $ChromeDriverVersionFile
+$ChromeDriverArchName = "chromedriver_win32.zip"
+$ChromeDriverZipDownloadUrl = "https://chromedriver.storage.googleapis.com/${ChromeDriverVersion}/${ChromeDriverArchName}"
 
-$DestFile= "$ChromeDriverPath\chromedriver_win32.zip";
-$ChromeDriverVersion.Content | Out-File -FilePath "$ChromeDriverPath\versioninfo.txt" -Force;
+$ChromeDriverArchPath = Start-DownloadWithRetry -Url $ChromeDriverZipDownloadUrl -Name $ChromeDriverArchName
 
-Write-Host "Chrome driver download....";
-Invoke-WebRequest -Uri $ChromeDriverZipDownloadUri -OutFile $DestFile;
+Write-Host "Expand Chrome WebDriver archive..."
+Extract-7Zip -Path $ChromeDriverArchPath -DestinationPath $ChromeDriverPath
 
-Write-Host "Chrome driver install....";
-Expand-Archive -Path "$ChromeDriverPath\chromedriver_win32.zip" -DestinationPath $ChromeDriverPath -Force;
-Remove-Item -Path "$ChromeDriverPath\chromedriver_win32.zip" -Force;
+Write-Host "Setting the environment variables..."
+setx ChromeWebDriver "$ChromeDriverPath" /M
 
-Write-Host "Setting the environment variables"
+$regEnvKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\'
+$PathValue = Get-ItemPropertyValue -Path $regEnvKey -Name 'Path'
+$PathValue += ";$ChromeDriverPath\"
+Set-ItemProperty -Path $regEnvKey -Name 'Path' -Value $PathValue
 
-setx ChromeWebDriver "$ChromeDriverPath" /M;
-
-$regEnvKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\';
-$PathValue = Get-ItemPropertyValue -Path $regEnvKey -Name 'Path';
-$PathValue += ";$ChromeDriverPath\";
-Set-ItemProperty -Path $regEnvKey -Name 'Path' -Value $PathValue;
+Invoke-PesterTests -TestFile "Browsers" -TestName "Chrome"

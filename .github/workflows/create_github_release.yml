@@ -1,0 +1,24 @@
+name: Create GitHub release
+
+on:
+  repository_dispatch:
+    types: [create-github-release]
+
+
+jobs:
+  Create_GitHub_release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Create release for ${{ github.event.client_payload.ReleaseBranchName }}
+      uses: actions/create-release@v1.1.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event.client_payload.ReleaseBranchName }}
+        release_name: ${{ github.event.client_payload.ReleaseTitle }}
+        body: ${{ github.event.client_payload.ReleaseBody }}
+        prerelease: ${{ github.event.client_payload.Prerelease }}
+        commitish: ${{ github.event.client_payload.Commitish }}

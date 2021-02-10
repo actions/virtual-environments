@@ -3,71 +3,106 @@
 ##  Desc:  Install various JDKs and java tools
 ################################################################################
 
-# Download the Azul Systems Zulu JDKs
-# See https://www.azul.com/downloads/azure-only/zulu/
-$azulJDK7Uri = 'https://repos.azul.com/azure-only/zulu/packages/zulu-7/7u232/zulu-7-azure-jdk_7.31.0.5-7.0.232-win_x64.zip'
-$azulJDK8Uri = 'https://repos.azul.com/azure-only/zulu/packages/zulu-8/8u222/zulu-8-azure-jdk_8.40.0.25-8.0.222-win_x64.zip'
-$azulJDK11Uri = 'https://repos.azul.com/azure-only/zulu/packages/zulu-11/11.0.4/zulu-11-azure-jdk_11.33.15-11.0.4-win_x64.zip'
+function Set-JavaPath {
+    param (
+        [string] $Version,
+        [string] $JavaRootPath,
+        [switch] $Default
+    )
 
-cd $env:TEMP
+    if ($Version -eq 7) {
+        $matchedString = "azure-jdk_7"
+    } else {
+        $matchedString = "jdk-?$Version"
+    }
+    $javaPath = (Get-ChildItem -Path $JavaRootPath | Where-Object { $_ -match $matchedString}).FullName
 
-Invoke-WebRequest -UseBasicParsing -Uri $azulJDK7Uri -OutFile azulJDK7.zip
-Invoke-WebRequest -UseBasicParsing -Uri $azulJDK8Uri -OutFile azulJDK8.zip
-Invoke-WebRequest -UseBasicParsing -Uri $azulJDK11Uri -OutFile azulJDK11.zip
+    if ([string]::IsNullOrEmpty($javaPath)) {
+        Write-Host "Not found path to Java $Version"
+        exit 1
+    }
 
-# Expand the zips
-Expand-Archive -Path azulJDK7.zip -DestinationPath "C:\Program Files\Java\" -Force
-Expand-Archive -Path azulJDK8.zip -DestinationPath "C:\Program Files\Java\" -Force
-Expand-Archive -Path azulJDK11.zip -DestinationPath "C:\Program Files\Java\" -Force
+    Write-Host "Set JAVA_HOME_${Version}_X64 environmental variable as $javaPath"
+    setx JAVA_HOME_${Version}_X64 $javaPath /M
 
-# Deleting zip folders
-Remove-Item -Recurse -Force azulJDK7.zip
-Remove-Item -Recurse -Force azulJDK8.zip
-Remove-Item -Recurse -Force azulJDK11.zip
-
-Import-Module -Name ImageHelpers -Force
-
-$currentPath = Get-MachinePath
-
-$pathSegments = $currentPath.Split(';')
-$newPathSegments = @()
-
-foreach ($pathSegment in $pathSegments)
-{
-    if($pathSegment -notlike '*java*')
+    if ($Default)
     {
-        $newPathSegments += $pathSegment
+        $currentPath = Get-MachinePath
+
+        $pathSegments = $currentPath.Split(';')
+        $newPathSegments = @()
+
+        foreach ($pathSegment in $pathSegments)
+        {
+            if ($pathSegment -notlike '*java*')
+            {
+                $newPathSegments += $pathSegment
+            }
+        }
+
+        $newPath = [string]::Join(';', $newPathSegments)
+        $newPath = $javaPath + '\bin;' + $newPath
+
+        Write-Host "Add $javaPath\bin to PATH"
+        Set-MachinePath -NewPath $newPath
+
+        Write-Host "Set JAVA_HOME environmental variable as $javaPath"
+        setx JAVA_HOME $javaPath /M
     }
 }
 
-$java7Installs = Get-ChildItem -Path 'C:\Program Files\Java' -Filter '*azure-jdk*7*' | Sort-Object -Property Name -Descending | Select-Object -First 1
-$latestJava7Install = $java7Installs.FullName;
+function Install-Java7FromAzul {
+    param(
+        [string] $DestinationPath
+    )
+    $azulJDK7URL = 'https://repos.azul.com/azure-only/zulu/packages/zulu-7/7u232/zulu-7-azure-jdk_7.31.0.5-7.0.232-win_x64.zip'
+    $archivePath = Start-DownloadWithRetry -Url $azulJDK7URL -Name $([IO.Path]::GetFileName($azulJDK7URL))
+    Extract-7Zip -Path $archivePath -DestinationPath $DestinationPath
+}
 
-$java8Installs = Get-ChildItem -Path 'C:\Program Files\Java' -Filter '*azure-jdk*8*' | Sort-Object -Property Name -Descending | Select-Object -First 1
-$latestJava8Install = $java8Installs.FullName;
+function Install-JavaFromAdoptOpenJDK {
+    param(
+        [string] $JDKVersion,
+        [string] $DestinationPath
+    )
 
-$java11Installs = Get-ChildItem -Path 'C:\Program Files\Java' -Filter '*azure-jdk*11*' | Sort-Object -Property Name -Descending | Select-Object -First 1
-$latestJava11Install = $java11Installs.FullName;
+    $assets = Invoke-RestMethod -Uri "https://api.adoptopenjdk.net/v3/assets/latest/$JDKVersion/hotspot"
+    $downloadUrl = ($assets | Where-Object {
+        $_.binary.os -eq "windows" `
+        -and $_.binary.architecture -eq "x64" `
+        -and $_.binary.image_type -eq "jdk"
+    }).binary.package.link
 
-$newPath = [string]::Join(';', $newPathSegments)
-$newPath = $latestJava8Install + '\bin;' + $newPath
+    $archivePath = Start-DownloadWithRetry -Url $downloadUrl -Name $([IO.Path]::GetFileName($downloadUrl))
+    Extract-7Zip -Path $archivePath -DestinationPath $DestinationPath
+}
 
-Set-MachinePath -NewPath $newPath
+$jdkVersions = @(7, 8, 11, 13)
+$defaultVersion = 8
+$javaRootPath = "C:\Program Files\Java\"
 
-setx JAVA_HOME $latestJava8Install /M
-setx JAVA_HOME_7_X64 $latestJava7Install /M
-setx JAVA_HOME_8_X64 $latestJava8Install /M
-setx JAVA_HOME_11_X64 $latestJava11Install /M
+foreach ($jdkVersion in $jdkVersions) {
+    if ($jdkVersion -eq 7) {
+        Install-Java7FromAzul -DestinationPath $javaRootPath
+    } else {
+        Install-JavaFromAdoptOpenJDK -JDKVersion $jdkVersion -DestinationPath $javaRootPath
+    }
+
+    if ($jdkVersion -eq $defaultVersion) {
+        Set-JavaPath -Version $jdkVersion -JavaRootPath $javaRootPath -Default
+    } else {
+        Set-JavaPath -Version $jdkVersion -JavaRootPath $javaRootPath
+    }
+}
 
 # Install Java tools
 # Force chocolatey to ignore dependencies on Ant and Maven or else they will download the Oracle JDK
-choco install ant -y -i
-choco install maven -y -i --version=3.6.3
-choco install gradle -y
+Choco-Install -PackageName ant -ArgumentList "-i"
+Choco-Install -PackageName maven -ArgumentList "-i", "--version=3.6.3"
+Choco-Install -PackageName gradle
 
 # Move maven variables to Machine. They may not be in the environment for this script so we need to read them from the registry.
-$userSid = (Get-WmiObject win32_useraccount -Filter "name = '$env:USERNAME' AND domain = '$env:USERDOMAIN'").SID
-$userEnvironmentKey = 'Registry::HKEY_USERS\' + $userSid + '\Environment'
+$userEnvironmentKey = 'Registry::HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 
 $m2_home = (Get-ItemProperty -Path $userEnvironmentKey -Name M2_HOME).M2_HOME
 $m2 = $m2_home + '\bin'
@@ -82,17 +117,12 @@ setx M2_REPO $m2_repo /M
 setx MAVEN_OPTS $maven_opts /M
 
 # Download cobertura jars
-$uri = 'https://ayera.dl.sourceforge.net/project/cobertura/cobertura/2.1.1/cobertura-2.1.1-bin.zip'
+$uri = 'https://downloads.sourceforge.net/project/cobertura/cobertura/2.1.1/cobertura-2.1.1-bin.zip'
 $coberturaPath = "C:\cobertura-2.1.1"
 
-cd $env:TEMP
-
-Invoke-WebRequest -UseBasicParsing -Uri $uri -OutFile cobertura.zip
-
-# Expand the zip
-Expand-Archive -Path cobertura.zip -DestinationPath "C:\" -Force
-
-# Deleting zip folder
-Remove-Item -Recurse -Force cobertura.zip
+$archivePath = Start-DownloadWithRetry -Url $uri -Name "cobertura.zip"
+Extract-7Zip -Path $archivePath -DestinationPath "C:\"
 
 setx COBERTURA_HOME $coberturaPath /M
+
+Invoke-PesterTests -TestFile "Java"

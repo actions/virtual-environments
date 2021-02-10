@@ -3,4 +3,6 @@
 ##  Desc:  Install Packer
 ################################################################################
 
-choco install packer -y
+Choco-Install -PackageName packer
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Packer"

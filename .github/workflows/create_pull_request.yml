@@ -1,0 +1,35 @@
+name: Create Pull Request
+
+on:
+  repository_dispatch:
+    types: [create-pr]
+
+
+jobs:
+  Create_pull_request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Clone release branch to create pull request
+      run: |
+        git checkout ${{ github.event.client_payload.ReleaseBranchName }}
+        git branch ${{ github.event.client_payload.ReleaseBranchName }}-docs
+        git push origin ${{ github.event.client_payload.ReleaseBranchName }}-docs
+
+    - name: Create pull request for ${{ github.event.client_payload.ReleaseBranchName }}
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.pulls.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: "${{ github.event.client_payload.PullRequestTitle }}",
+            head: "${{ github.event.client_payload.ReleaseBranchName }}-docs",
+            base: "${{ github.event.client_payload.PullRequestBase }}",
+            body: `${{ github.event.client_payload.PullRequestBody }}`
+          });

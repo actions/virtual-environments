@@ -1,11 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 ################################################################################
 ##  File:  google-chrome.sh
 ##  Desc:  Installs google-chrome  and chromedriver
 ################################################################################
-
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 LSB_RELEASE=$(lsb_release -rs)
 
@@ -21,10 +18,6 @@ if ! command -v google-chrome; then
     echo "google-chrome was not installed"
     exit 1
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Google Chrome ($(google-chrome --version))"
 
 CHROME_VERSION=$(google-chrome --product-version)
 CHROME_VERSION=${CHROME_VERSION%.*}
@@ -54,6 +47,3 @@ if ! command -v chromedriver; then
     echo "chromedriver was not installed"
     exit 1
 fi
-
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "$(chromedriver --version); Chrome Driver is available via CHROMEWEBDRIVER environment variable"

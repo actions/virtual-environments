@@ -1,0 +1,139 @@
+jobs:
+- job: Image_generation
+  displayName: Image Generation (${{ parameters.image_label }})
+  timeoutInMinutes: 720
+  pool:
+    name: Mac-Cloud Image Generation
+  variables:
+  - group: Mac-Cloud Image Generation
+  - group: Mac-Cloud Image Generation Key Vault
+  - name: VirtualMachineName
+    value: $(Build.BuildNumber).$(System.JobAttempt)
+
+  steps:
+  - checkout: self
+    clean: true
+    fetchDepth: 1
+
+  - task: PowerShell@2
+    displayName: 'Validate contributor permissions'
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/pull/')
+    inputs:
+      targetType: 'filePath'
+      filePath: ./images.CI/macos/validate-contributor.ps1
+      pwsh: true
+      arguments: -RepositoryName "$(Build.Repository.Name)" `
+                 -AccessToken "$(github-feed-token)" `
+                 -SourceBranch "$(Build.SourceBranch)" `
+                 -ContributorAllowList "$(CONTRIBUTOR_ALLOWLIST)"
+
+  - task: PowerShell@2
+    displayName: 'Download custom repository'
+    condition: and(ne(variables['CUSTOM_REPOSITORY_URL'], ''), ne(variables['CUSTOM_REPOSITORY_BRANCH'], ''))
+    inputs:
+      targetType: 'filePath'
+      filePath: ./images.CI/download-repo.ps1
+      arguments: -RepoUrl $(CUSTOM_REPOSITORY_URL) `
+                 -RepoBranch $(CUSTOM_REPOSITORY_BRANCH)
+
+  - task: DeleteFiles@1
+    displayName: Clean up self-hosted machine
+    inputs:
+      SourceFolder: 'images/macos/provision/log/'
+      RemoveSourceFolder: true
+
+  - task: PowerShell@2
+    displayName: 'Select datastore'
+    inputs:
+      targetType: 'filePath'
+      filePath: ./images.CI/macos/select-datastore.ps1
+      arguments: -VIServer "$(vcenter-server-v2)" `
+                 -VIUserName "$(vcenter-username-v2)" `
+                 -VIPassword "$(vcenter-password-v2)"
+
+  - pwsh: |
+      $SensitiveData = @(
+          'IP address:',
+          'Using ssh communicator to connect:'
+      )
+
+      packer build -on-error=abort `
+        -var="vcenter_server=$(vcenter-server-v2)" `
+        -var="vcenter_username=$(vcenter-username-v2)" `
+        -var="vcenter_password=$(vcenter-password-v2)" `
+        -var="vcenter_datacenter=$(vcenter-datacenter-v2)" `
+        -var="cluster_or_esxi_host=$(esxi-cluster-v2)" `
+        -var="esxi_datastore=$(buildDatastore)" `
+        -var="output_folder=$(output-folder)" `
+        -var="vm_username=$(vm-username)" `
+        -var="vm_password=$(vm-password)" `
+        -var="build_id=${{ variables.VirtualMachineName }}" `
+        -var="baseimage_name=${{ parameters.base_image_name }}" `
+        -var="github_feed_token=$(github-feed-token)" `
+        -var="xcode_install_user=$(xcode-installation-user)" `
+        -var="xcode_install_password=$(xcode-installation-password)" `
+        -color=false `
+        ${{ parameters.template_path }} `
+        | Where-Object {
+            #Filter sensitive data from Packer logs
+            $currentString = $_
+            $sensitiveString = $SensitiveData | Where-Object { $currentString -match $_ }
+            $sensitiveString -eq $null
+        }
+    displayName: 'Build VM'
+    env:
+      PACKER_LOG: 0
+    workingDirectory: 'images/macos'
+
+  - bash: |
+      echo "Copy image output files"
+      cp -R "images/image-output/software-report/." "$(Build.ArtifactStagingDirectory)/"
+
+      echo "Copy test results"
+      cp -R "images/image-output/tests/." "$(Common.TestResultsDirectory)/"
+      ls $(Common.TestResultsDirectory)
+
+      echo "Put VM name to 'VM_Done_Name' file"
+      echo "${{ variables.VirtualMachineName }}" > "$(Build.ArtifactStagingDirectory)/VM_Done_Name"
+    displayName: Prepare artifact
+
+  - bash: |
+      cat "$(Build.ArtifactStagingDirectory)/systeminfo.md"
+    displayName: Print software report
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      ArtifactName: 'Built_VM_Artifacts'
+    displayName: Publish Artifacts
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '*.xml'
+      testResultsFormat: NUnit
+      searchFolder: '$(Common.TestResultsDirectory)'
+      failTaskOnFailedTests: true
+    displayName: Publish test results
+    condition: always()
+
+  - task: PowerShell@2
+    displayName: 'Move vm to cold storage'
+    condition: succeededOrFailed()
+    inputs:
+      targetType: 'filePath'
+      filePath: ./images.CI/macos/move-vm.ps1
+      arguments: -VMName "${{ variables.VirtualMachineName }}" `
+                 -TargetDataStore "${{ parameters.target_datastore }}" `
+                 -VIServer "$(vcenter-server-v2)" `
+                 -VIUserName "$(vcenter-username-v2)" `
+                 -VIPassword "$(vcenter-password-v2)"
+
+  - task: PowerShell@2
+    displayName: 'Destroy VM (if build canceled only)'
+    condition: eq(variables['Agent.JobStatus'], 'Canceled')
+    inputs:
+      targetType: 'filePath'
+      filePath: ./images.CI/macos/destroy-vm.ps1
+      arguments: -VMName "${{ variables.VirtualMachineName }}" `
+                 -VIServer "$(vcenter-server-v2)" `
+                 -VIUserName "$(vcenter-username-v2)" `
+                 -VIPassword "$(vcenter-password-v2)"

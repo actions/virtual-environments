@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/bash -e
 ################################################################################
 ##  File:  gcc.sh
 ##  Desc:  Installs GNU C++
 ################################################################################
 
 # Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
+source $HELPER_SCRIPTS/os.sh
 
 function InstallGcc {
     version=$1
@@ -19,10 +19,6 @@ function InstallGcc {
         echo "$version was not installed"
         exit 1
     fi
-
-    # Document what was added to the image
-    echo "Documenting $version..."
-    DocumentInstalledItem "GNU C++ $($version --version | head -n 1 | cut -d ' ' -f 4)"
 }
 
 # Install GNU C++ compiler
@@ -35,7 +31,10 @@ versions=(
     "g++-9"
 )
 
-for version in ${versions[*]}
-do
+if ! isUbuntu16; then
+    versions+=("g++-10")
+fi
+
+for version in ${versions[*]}; do
     InstallGcc $version
 done

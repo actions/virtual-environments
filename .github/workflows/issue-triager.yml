@@ -13,28 +13,32 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-      
+
     - uses: damccorm/tag-ur-it@master
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         configuration-path: "./triage-rules.yml"
 
-    - if: failure()
+    - if: always()
       uses: actions/github-script@0.4.0
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          github.issues.addLabels({
-            issue_number: context.issue,
-            owner: context.owner,
-            repo: context.repo,
-            labels: ['needs triage']
-          })
+          const issueLabels = await github.issues.listLabelsOnIssue({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          });
 
-    - name: Set Node.js 10.x
-      uses: actions/setup-node@master
-      with:
-        version: 10.x
+          const isAnnouncement = issueLabels.data && issueLabels.data
+            .map(label => label.name)
+            .includes('Announcement');
 
-    # Need to explicitly install @octokit/rest separately or else it will mess with our typings.
-    - run: npm install && npm install @octokit/rest
+          if (!isAnnouncement) {
+            github.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['needs triage']
+            })
+          }

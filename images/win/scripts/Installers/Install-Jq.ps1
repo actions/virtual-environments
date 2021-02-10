@@ -3,4 +3,6 @@
 ##  Desc:  Install jq
 ################################################################################
 
-choco install jq -y
+Choco-Install -PackageName jq
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Jq"

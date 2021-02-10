@@ -1,0 +1,59 @@
+name: Merge pull request
+
+on:
+  repository_dispatch:
+    types: [merge-pr]
+
+
+jobs:
+  Merge_pull_request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Resolve possible conflicts ${{ github.event.client_payload.ReleaseBranchName }} with main
+      run: |
+        git config --global user.email "no-reply@github.com"
+        git config --global user.name "Actions service account"
+        git checkout ${{ github.event.client_payload.ReleaseBranchName }}-docs
+        git merge --no-edit --strategy-option=ours main
+        git push origin ${{ github.event.client_payload.ReleaseBranchName }}-docs
+        sleep 30
+
+    - name: Approve pull request by GitHub-Actions bot
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{secrets.PRAPPROVAL_SECRET}}
+        script: |
+          github.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: ${{ github.event.client_payload.PullRequestNumber }},
+            event: "APPROVE"
+          });
+
+    - name: Merge pull request for ${{ github.event.client_payload.ReleaseBranchName }}
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.pulls.merge({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: ${{ github.event.client_payload.PullRequestNumber }},
+            merge_method: "squash"
+          })
+
+    - name: Delete docs branch ${{ github.event.client_payload.ReleaseBranchName }}-docs
+      uses: actions/github-script@v2
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.git.deleteRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: "heads/${{ github.event.client_payload.ReleaseBranchName }}-docs"
+          })

@@ -1,0 +1,195 @@
+{
+    "toolcache": [
+        {
+            "name": "Python",
+            "url" : "https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json",
+            "platform" : "linux",
+            "platform_version": "16.04",
+            "arch": "x64",
+            "versions": [
+                "2.7.*",
+                "3.5.*",
+                "3.6.*",
+                "3.7.*",
+                "3.8.*",
+                "3.9.*"
+            ]
+        },
+        {
+            "name": "PyPy",
+            "arch": "x64",
+            "platform" : "linux",
+            "versions": [
+                "2.7",
+                "3.6"
+            ]
+        },
+        {
+            "name": "node",
+            "url" : "https://raw.githubusercontent.com/actions/node-versions/main/versions-manifest.json",
+            "platform" : "linux",
+            "arch": "x64",
+            "versions": [
+                "8.*",
+                "10.*",
+                "12.*",
+                "14.*"
+            ]
+        },
+        {
+            "name": "go",
+            "url" : "https://raw.githubusercontent.com/actions/go-versions/main/versions-manifest.json",
+            "arch": "x64",
+            "platform" : "linux",
+            "versions": [
+                "1.11.*",
+                "1.12.*",
+                "1.13.*",
+                "1.14.*",
+                "1.15.*"
+            ],
+            "default": "1.14.*"
+        },
+        {
+            "name": "boost",
+            "url" : "https://raw.githubusercontent.com/actions/boost-versions/main/versions-manifest.json",
+            "platform" : "linux",
+            "platform_version": "16.04",
+            "arch": "x64",
+            "versions": [
+                "1.69.0",
+                "1.72.0"
+            ]
+        }
+    ],
+    "android": {
+        "platform_min_version": "10",
+        "build_tools_min_version": "17.0.0",
+        "extra_list": [
+            "android;m2repository",
+            "google;m2repository",
+            "google;google_play_services",
+            "m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2",
+            "m2repository;com;android;support;constraint;constraint-layout-solver;1.0.1",
+            "m2repository;com;android;support;constraint;constraint-layout;1.0.2",
+            "m2repository;com;android;support;constraint;constraint-layout;1.0.1"
+        ],
+        "addon_list": [
+            "addon-google_apis-google-24",
+            "addon-google_apis-google-23",
+            "addon-google_apis-google-22",
+            "addon-google_apis-google-21"
+        ],
+        "additional_tools": [
+            "cmake;3.6.4111459",
+            "cmake;3.10.2.4988404",
+            "patcher;v4",
+            "ndk-bundle",
+            "platform-tools"
+        ]
+    },
+    "powershellModules": [
+        {"name": "MarkdownPS"},
+        {"name": "Pester"}
+    ],
+    "azureModules": [
+        {
+            "name": "az",
+            "versions": [
+                "1.0.0",
+                "1.6.0",
+                "2.3.2",
+                "2.6.0",
+                "2.8.0",
+                "3.1.0",
+                "3.5.0",
+                "3.8.0",
+                "4.3.0",
+                "4.4.0",
+                "4.6.0",
+                "4.7.0"
+            ]
+        }
+    ],
+    "apt": {
+        "common_packages": [
+            "dbus",
+            "dnsutils",
+            "dpkg",
+            "fakeroot",
+            "gnupg2",
+            "iproute2",
+            "iputils-ping",
+            "lib32z1",
+            "libc++abi-dev",
+            "libc++-dev",
+            "libcurl3",
+            "libgbm-dev",
+            "libgconf-2-4",
+            "libgtk-3-0",
+            "libicu55",
+            "libsecret-1-dev",
+            "libsqlite3-dev",
+            "libunwind8",
+            "libxkbfile-dev",
+            "libxss1",
+            "locales",
+            "openssh-client",
+            "pkg-config",
+            "rpm",
+            "texinfo",
+            "tk",
+            "tzdata",
+            "upx",
+            "xorriso",
+            "xvfb",
+            "xz-utils",
+            "zstd",
+            "zsync"
+        ],
+        "cmd_packages": [
+            "bison",
+            "brotli",
+            "bzip2",
+            "curl",
+            "file",
+            "flex",
+            "ftp",
+            "jq",
+            "m4",
+            "netcat",
+            "parallel",
+            "patchelf",
+            "rsync",
+            "shellcheck",
+            "sqlite3",
+            "ssh",
+            "sudo",
+            "telnet",
+            "time",
+            "unzip",
+            "wget",
+            "yamllint",
+            "zip"
+        ]
+    },
+    "docker": {
+        "images": [
+            "alpine:3.7",
+            "alpine:3.8",
+            "alpine:3.9",
+            "alpine:3.10",
+            "buildpack-deps:stretch",
+            "buildpack-deps:buster",
+            "debian:8",
+            "debian:9",
+            "jekyll/builder",
+            "mcr.microsoft.com/azure-pipelines/node8-typescript",
+            "node:10",
+            "node:12",
+            "node:10-alpine",
+            "node:12-alpine",
+            "ubuntu:14.04"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+name: macOS-10.14_$(date:yyyyMMdd)$(rev:.r)_unstable
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily
+  branches:
+    include:
+    - main
+  always: true
+
+trigger: none
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - main
+
+jobs:
+- template: image-generation.yml
+  parameters:
+    image_label: 'macOS Mojave'
+    base_image_name: 'clean-macOS-10.14-380Gb_runner'
+    template_path: 'templates/macOS-10.14.json'
+    target_datastore: 'ds-image'

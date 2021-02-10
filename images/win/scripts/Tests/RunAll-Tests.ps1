@@ -1,0 +1,1 @@
+Invoke-PesterTests "*"

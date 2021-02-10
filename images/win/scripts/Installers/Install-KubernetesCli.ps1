@@ -3,4 +3,7 @@
 ##  Desc:  Install KubernetesCli
 ################################################################################
 
-choco install kubernetes-cli -y
+Choco-Install -PackageName kubernetes-cli
+Choco-Install -PackageName minikube
+
+Invoke-PesterTests -TestFile "Tools" -TestName "KubernetesCli"

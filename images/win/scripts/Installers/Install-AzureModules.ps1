@@ -3,57 +3,31 @@
 ##  Desc:  Install Azure PowerShell modules
 ################################################################################
 
-Set-PSRepository -InstallationPolicy Trusted -Name PSGallery
-
-#### NOW The correct Modules need to be saved in C:\Modules
-$installPSModulePath = 'C:\Modules'
-if(-not (Test-Path -LiteralPath $installPSModulePath))
+# The correct Modules need to be saved in C:\Modules
+$installPSModulePath = $env:PSMODULES_ROOT_FOLDER
+if (-not (Test-Path -LiteralPath $installPSModulePath))
 {
-    Write-Host "Creating '$installPSModulePath' folder to store PowerShell Azure modules"
+    Write-Host "Creating ${installPSModulePath} folder to store PowerShell Azure modules..."
     $null = New-Item -Path $installPSModulePath -ItemType Directory
 }
 
-# Powershell Azure modules to install
-$psAzureModulesToInstall = @{
-    "azurerm" = @(
-        "2.1.0"
-        "3.8.0"
-        "4.2.1"
-        "5.1.1"
-        "6.7.0"
-        "6.13.1"
-    )
+# Get modules content from toolset
+$modules = (Get-ToolsetContent).azureModules
 
-    "azure" = @(
-        "2.1.0"
-        "3.8.0"
-        "4.2.1"
-        "5.1.1"
-        "5.3.0"
-    )
+$psModuleMachinePath = ""
 
-    "az" = @(
-        "1.0.0"
-        "1.6.0"
-        "2.3.2"
-        "2.6.0"
-        "3.1.0"
-        "3.5.0"
-    )
-}
-
-# Download Azure PowerShell modules
-foreach($psmoduleName in $psAzureModulesToInstall.Keys)
+foreach ($module in $modules)
 {
-    Write-Host "Installing '$psmoduleName' to the '$installPSModulePath' path:"
-    $psmoduleVersions = $psAzureModulesToInstall[$psmoduleName]
-    foreach($psmoduleVersion in $psmoduleVersions)
+    $moduleName = $module.name
+
+    Write-Host "Installing ${moduleName} to the ${installPSModulePath} path..."
+    foreach ($version in $module.versions)
     {
-        $psmodulePath = Join-Path $installPSModulePath "${psmoduleName}_${psmoduleVersion}"
-        Write-Host " - $psmoduleVersion [$psmodulePath]"
+        $modulePath = Join-Path -Path $installPSModulePath -ChildPath "${moduleName}_${version}"
+        Write-Host " - $version [$modulePath]"
         try
         {
-            Save-Module -Path $psmodulePath -Name $psmoduleName -RequiredVersion $psmoduleVersion -Force -ErrorAction Stop
+            Save-Module -Path $modulePath -Name $moduleName -RequiredVersion $version -Force -ErrorAction Stop
         }
         catch
         {
@@ -61,8 +35,19 @@ foreach($psmoduleName in $psAzureModulesToInstall.Keys)
             exit 1
         }
     }
+
+    # Append default tool version to machine path
+    if ($null -ne $module.default)
+    {
+        $defaultVersion = $module.default
+
+        Write-Host "Use ${moduleName} ${defaultVersion} as default version..."
+        $psModuleMachinePath += "${installPSModulePath}\${moduleName}_${defaultVersion};"
+    }
 }
 
-# Add AzureRM and Azure modules to the PSModulePath
-$finalModulePath = '{0};{1};{2}' -f "${installPSModulePath}\azurerm_2.1.0", "${installPSModulePath}\azure_2.1.0", $env:PSModulePath
-[Environment]::SetEnvironmentVariable("PSModulePath", $finalModulePath, "Machine")
+# Add modules to the PSModulePath
+$psModuleMachinePath += $env:PSModulePath
+[Environment]::SetEnvironmentVariable("PSModulePath", $psModuleMachinePath, "Machine")
+
+Invoke-PesterTests -TestFile "PowerShellModules" -TestName "AzureModules"

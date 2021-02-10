@@ -3,38 +3,40 @@
 ##  Desc:  Install Kind
 ################################################################################
 
-$stableKindTag = "v0.7.0"
-$tagToUse = $stableKindTag;
-$destFilePath = "C:\ProgramData\kind"
-$outFilePath = "C:\ProgramData\kind\kind.exe"
+function Get-LatestRelease
+{
+    $url = 'https://api.github.com/repos/kubernetes-sigs/kind/releases/latest'
+    (Invoke-RestMethod -Uri $url).assets.browser_download_url -match "kind-windows-amd64"
+}
 
 try
 {
-    $getkindUri =  "https://github.com/kubernetes-sigs/kind/releases/download/$tagToUse/kind-windows-amd64"
-    Write-Host "Downloading kind.exe..."
-    New-Item -Path $destFilePath -ItemType Directory -Force
-
-    Invoke-WebRequest -Uri $getkindUri -OutFile $outFilePath
-
     Write-Host "Starting Install kind.exe..."
-    $process = Start-Process -FilePath $outFilePath -Wait -PassThru
+    $destFilePath = "C:\ProgramData\kind"
+    $null = New-Item -Path $destFilePath -ItemType Directory -Force
+
+    $kindUrl = Get-LatestRelease
+    $kindInstallerPath = Start-DownloadWithRetry -Url $kindUrl -Name "kind.exe" -DownloadPath $destFilePath
+
+    $process = Start-Process -FilePath $kindInstallerPath -Wait -PassThru
     $exitCode = $process.ExitCode
 
     if ($exitCode -eq 0 -or $exitCode -eq 3010)
     {
-        Write-Host -Object 'Installation successful'
+        Write-Host 'Installation successful'
         Add-MachinePathItem $destFilePath
-        exit $exitCode
     }
     else
     {
-        Write-Host -Object "Non zero exit code returned by the installation process : $exitCode."
+        Write-Host "Non zero exit code returned by the installation process : $exitCode."
         exit $exitCode
     }
 }
 catch
 {
-    Write-Host -Object "Failed to install the Executable kind.exe"
-    Write-Host -Object $_.Exception.Message
-    exit -1
+    Write-Host "Failed to install the Executable kind.exe"
+    Write-Host $_.Exception.Message
+    exit 1
 }
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Kind"

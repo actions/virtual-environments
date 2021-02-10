@@ -8,9 +8,12 @@
 Write-Host "Install Containers feature"
 Install-WindowsFeature -Name Containers
 
-if ((GWMI Win32_Processor).VirtualizationFirmwareEnabled[0] -and (GWMI Win32_Processor).SecondLevelAddressTranslationExtensions[0]) {
+$cpu = (Get-CimInstance -ClassName Win32_Processor)[0]
+if ($cpu.VirtualizationFirmwareEnabled -and $cpu.SecondLevelAddressTranslationExtensions) {
   Write-Host "Install Hyper-V feature"
   Install-WindowsFeature -Name Hyper-V -IncludeManagementTools
 } else {
   Write-Host "Skipping installation of Hyper-V feature"
 }
+
+Invoke-PesterTests -TestFile "WindowsFeatures" -TestName "ContainersFeature"

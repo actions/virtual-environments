@@ -1,12 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 ################################################################################
 ##  File:  erlang.sh
 ##  Desc:  Installs erlang
 ################################################################################
-
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
-source $HELPER_SCRIPTS/apt.sh
 
 source_list=/etc/apt/sources.list.d/eslerlang.list
 
@@ -29,11 +25,6 @@ for cmd in erl erlc rebar3; do
         exit 1
     fi
 done
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-erlang_version="$(erl -version 2>&1 | tr -d '\n' | tr -d '\r')"
-DocumentInstalledItem "Erlang ($erlang_version)"
 
 # Clean up source list
 rm $source_list

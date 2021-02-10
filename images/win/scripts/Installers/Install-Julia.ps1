@@ -3,4 +3,6 @@
 ##  Desc:  Install Julia
 ################################################################################
 
-choco install julia -y --ia "/D=C:\Julia"
+Choco-Install -PackageName julia -ArgumentList "--ia","/DIR=C:\Julia"
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Julia"

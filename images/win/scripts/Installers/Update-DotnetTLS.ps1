@@ -13,6 +13,7 @@ if(Test-Path $registryPath){
 $registryPath = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319"
 if(Test-Path $registryPath){
     Set-ItemProperty -Path $registryPath -Name $name -Value $value -Type DWORD
-} 
+}
 
+Invoke-PesterTests -TestFile "Tools" -TestName "DotnetTLS"
 

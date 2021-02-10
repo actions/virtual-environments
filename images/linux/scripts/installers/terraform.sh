@@ -1,12 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 ################################################################################
 ##  File:  terraform.sh
 ##  Desc:  Installs terraform
 ################################################################################
-
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
-source $HELPER_SCRIPTS/apt.sh
 
 # Install Terraform
 TERRAFORM_VERSION=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)
@@ -20,7 +16,3 @@ if ! command -v terraform; then
     echo "Terraform was not installed or found on PATH"
     exit 1
 fi
-
-# Document what was added to the image
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Terraform ($(terraform --version))"

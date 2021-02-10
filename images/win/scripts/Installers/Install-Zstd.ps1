@@ -3,4 +3,6 @@
 ##  Desc:  Install zstd
 ################################################################################
 
-choco install zstandard -y
+Choco-Install -PackageName zstandard
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Zstd"

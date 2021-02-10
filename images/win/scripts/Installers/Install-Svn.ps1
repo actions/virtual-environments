@@ -3,4 +3,6 @@
 ##  Desc:  Install Subversion
 ################################################################################
 
-choco install svn -y
+Choco-Install -PackageName tortoisesvn
+
+Invoke-PesterTests -TestFile "Tools" -TestName "Svn"

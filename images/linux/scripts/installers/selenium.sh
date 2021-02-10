@@ -1,11 +1,8 @@
-#!/bin/bash
+#!/bin/bash -e
 ################################################################################
 ##  File:  selenium.sh
 ##  Desc:  Installs selenium server
 ################################################################################
-
-# Source the helpers for use with the script
-source $HELPER_SCRIPTS/document.sh
 
 # Determine latest selenium standalone server version
 SELENIUM_LATEST_VERSION_URL=https://api.github.com/repos/SeleniumHQ/selenium/releases/latest
@@ -26,6 +23,3 @@ fi
 SELENIUM_JAR_PATH="/usr/share/java/selenium-server-standalone.jar"
 mv $SELENIUM_JAR_NAME $SELENIUM_JAR_PATH
 echo "SELENIUM_JAR_PATH=$SELENIUM_JAR_PATH" | tee -a /etc/environment
-
-echo "Lastly, documenting what we added to the metadata file"
-DocumentInstalledItem "Selenium server standalone (available via SELENIUM_JAR_PATH environment variable)"
