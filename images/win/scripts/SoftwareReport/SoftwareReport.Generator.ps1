@@ -74,6 +74,7 @@ $markdown += New-MDList -Style Unordered -Lines (@(
 $markdown += New-MDHeader "Tools" -Level 3
 $markdown += New-MDList -Style Unordered -Lines (@(
     (Get-7zipVersion),
+    (Get-Aria2Version),
     (Get-AzCopyVersion),
     (Get-BazelVersion),
     (Get-BazeliskVersion),

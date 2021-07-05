@@ -314,7 +314,8 @@
                 "{{ template_dir }}/scripts/Installers/Install-RootCA.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-MongoDB.ps1",
                 "{{ template_dir }}/scripts/Installers/Install-GoogleCloudSDK.ps1",
-                "{{ template_dir }}/scripts/Installers/Install-CodeQLBundle.ps1"
+                "{{ template_dir }}/scripts/Installers/Install-CodeQLBundle.ps1",
+                "{{ template_dir }}/scripts/Installers/Install-Aria2.ps1"
             ]
         },
         {

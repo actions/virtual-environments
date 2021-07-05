@@ -6,6 +6,12 @@ Describe "7-Zip" {
     }
 }
 
+Describe "Aria2" {
+    It "Aria2" {
+        "aria2c --version" | Should -ReturnZeroExitCode
+    }
+}
+
 Describe "AzCopy" {
     It "AzCopy" {
         "azcopy --version" | Should -ReturnZeroExitCode
