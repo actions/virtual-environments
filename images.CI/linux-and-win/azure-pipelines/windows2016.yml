@@ -8,7 +8,7 @@ schedules:
 
 trigger: none
 pr:
-  autoCancel: true
+  autoCancel: false
   branches:
     include:
     - main
