@@ -243,7 +243,8 @@
                 "{{template_dir}}/scripts/installers/nginx.sh",
                 "{{template_dir}}/scripts/installers/android.sh",
                 "{{template_dir}}/scripts/installers/pypy.sh",
-                "{{template_dir}}/scripts/installers/python.sh"
+                "{{template_dir}}/scripts/installers/python.sh",
+                "{{template_dir}}/scripts/installers/kotlin.sh"
             ],
             "environment_vars": [
                 "HELPER_SCRIPTS={{user `helper_script_folder`}}",

@@ -250,7 +250,8 @@
                 "{{template_dir}}/scripts/installers/yq.sh",
                 "{{template_dir}}/scripts/installers/pypy.sh",
                 "{{template_dir}}/scripts/installers/python.sh",
-                "{{template_dir}}/scripts/installers/aws.sh"
+                "{{template_dir}}/scripts/installers/aws.sh",
+                "{{template_dir}}/scripts/installers/kotlin.sh"
             ],
             "environment_vars": [
                 "HELPER_SCRIPTS={{user `helper_script_folder`}}",
